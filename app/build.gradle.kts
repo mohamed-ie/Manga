@@ -28,7 +28,7 @@ kotlin{
         }
 
         commonMain.dependencies {
-            implementation(projects.core.designSystem)
+            implementation(projects.core.ui)
 
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))

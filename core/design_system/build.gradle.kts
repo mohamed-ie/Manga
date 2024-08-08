@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.manage.core.ui"
+    namespace = "org.manage.core.design_system"
     dependencies {
         debugApi(compose.uiTooling)
     }
