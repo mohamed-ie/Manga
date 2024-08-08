@@ -15,7 +15,7 @@ kotlin{
         iosSimulatorArm64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
-            baseName = "ComposeApp"
+            baseName = "app"
             isStatic = true
         }
     }
@@ -28,14 +28,7 @@ kotlin{
         }
 
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.uiUtil)
+            implementation(projects.core.designSystem)
 
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))
@@ -46,17 +39,11 @@ kotlin{
         }
 
         androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
-
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.androidx.compose)
         }
 
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-        }
     }
 }
 
