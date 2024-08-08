@@ -28,5 +28,10 @@ gradlePlugin {
             id = "manga.kotlin.multiplatform.koin"
             implementationClass = "KotlinMultiplatformKoinConventionPlugin"
         }
+
+        register("kotlin-multiplatform-feature") {
+            id = "manga.kotlin.multiplatform.feature"
+            implementationClass = "KotlinMultiplatformFeatureConventionPlugin"
+        }
     }
 }

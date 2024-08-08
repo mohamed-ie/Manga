@@ -109,3 +109,4 @@ jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrai
 manga-kotlin-multiplatform-app = {id = "manga.kotlin.multiplatform.app", version ="unspecified"}
 manga-kotlin-multiplatform-library = {id = "manga.kotlin.multiplatform.library", version ="unspecified"}
 manga-kotlin-multiplatform-koin = {id = "manga.kotlin.multiplatform.koin", version ="unspecified"}
+manga-kotlin-multiplatform-feature = {id = "manga.kotlin.multiplatform.feature", version ="unspecified"}
