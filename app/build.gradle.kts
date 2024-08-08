@@ -59,7 +59,7 @@ dependencies {
 }
 
 android {
-    namespace = "org.manga.app"
+    namespace = "com.manga.app"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -67,7 +67,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "org.manga.app"
+        applicationId = "com.manga.app"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -97,7 +97,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.manga.app"
+            packageName = "com.manga.app"
             packageVersion = "1.0.0"
         }
     }

@@ -31,11 +31,13 @@ kotlin{
 
         androidMain.dependencies {
             api(compose.preview)
+            api(compose.uiTooling)
             api(libs.androidx.activity.compose)
         }
 
         desktopMain.dependencies {
             api(compose.desktop.currentOs)
+            api(compose.uiTooling)
         }
     }
 }

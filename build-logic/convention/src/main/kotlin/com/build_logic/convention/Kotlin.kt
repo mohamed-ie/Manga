@@ -101,7 +101,7 @@ val Project.buildConfigGenerator
             projectVersionProvider.map { version ->
                 resources.text.fromString(
                     """
-          |
+          |package ${project.name}
           |
           |object BuildConfig {
           |  const val PROJECT_VERSION = "$version"
@@ -116,6 +116,7 @@ val Project.buildConfigGenerator
         // Gradle accepts file providers as Sync inputs
         from(buildConfigFileContents) {
             rename { "BuildConfig.kt" }
+            into(project.name)
         }
 
         into(layout.buildDirectory.dir("generated-src/kotlin/"))
