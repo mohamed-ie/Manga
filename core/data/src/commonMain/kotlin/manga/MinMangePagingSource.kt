@@ -12,8 +12,8 @@ internal class MinMangePagingSource(
     private val mangaDataSource: MangaDexMangaNetworkDataSource,
     private val request: MangaListRequest,
     private val languageTag: String = "en"
-) : PagingSource<Int, MinMange>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MinMange> {
+) : PagingSource<Int, MinManga>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MinManga> {
         try {
             val offset = params.key ?: 0
             val response = mangaDataSource.mangaList(request.copy(offset = offset))
@@ -30,7 +30,7 @@ internal class MinMangePagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, MinMange>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, MinManga>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(request.limit) ?: anchorPage?.nextKey?.minus(request.limit)

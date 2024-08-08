@@ -21,7 +21,7 @@ import response.manga.asManga
 internal class MangaRepositoryImpl(
     private val mangaDataSource: MangaDexMangaNetworkDataSource
 ) : MangaRepository {
-    override fun mangaList(request: MangaListRequest): Flow<PagingData<MinMange>> =
+    override fun mangaList(request: MangaListRequest): Flow<PagingData<MinManga>> =
         Pager(
             config = PagingConfig(pageSize = request.limit),
             pagingSourceFactory = { MinMangePagingSource(mangaDataSource, request) }

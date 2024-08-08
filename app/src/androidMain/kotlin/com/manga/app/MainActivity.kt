@@ -1,4 +1,4 @@
-package org.manga
+package com.manga.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -2,12 +2,14 @@ package response.manga
 
 import core.common.Pageable
 import core.common.ext.filterValuesNotNull
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import manga.Manga
+import manga.MangaChapter
 import manga.MangaDexContentRating
 import manga.MangaDexPublicationDemographic
 import manga.MangaDexTagGroup
-import manga.MinMange
+import manga.MinManga
 import manga.Status
 
 @Serializable
@@ -89,15 +91,16 @@ fun MangaListResponse.asPageable(languageTag: String) = Pageable(
     totalCount = total ?: 0
 )
 
-private fun MangaListResponse.Manga.asMinManga(languageTag: String): MinMange? {
-    return MinMange(
+private fun MangaListResponse.Manga.asMinManga(languageTag: String): MinManga? {
+    return MinManga(
         id = id ?: return null,
         title = attributes?.title
             ?.run { this[languageTag] ?: values.firstOrNull { it != null } }
             ?: "",
         cover = relationships?.filterNotNull()?.cover256(mangaId = id),
-        lastChapter = attributes?.lastChapter ?: "",
+        lastChapter = attributes?.lastChapter?.let { MangaChapter("", it) },
         status = attributes?.status?.uppercase()?.let(Status::valueOf) ?: Status.ONGOING,
+        updatedAt = attributes?.updatedAt?.let(Instant::parse),
         publicationDemographic = attributes?.publicationDemographic?.uppercase()
             ?.let(MangaDexPublicationDemographic::valueOf)
     )

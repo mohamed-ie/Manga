@@ -1,10 +1,10 @@
 package core.ui
 
-import BuildConfig
 import core.common.Resource
 import core.common.onFailure
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.message_unexpected_error
+import ui.BuildConfig
 
 inline fun <D, E : Throwable> Resource<D, E>.onFailure(block: (UiText) -> Unit) =
     onFailure { expected, unexpected ->
