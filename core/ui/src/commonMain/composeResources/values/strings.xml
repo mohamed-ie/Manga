@@ -1,0 +1,11 @@
+<resources>
+    <string name="screen_title_recent_updated">Recent updated</string>
+    <string name="message_unexpected_error">Unexpected error occurred please try again later</string>
+    <string name="text_information">Information</string>
+    <string name="text_chapter">Chapter</string>
+    <string name="text_language">Language</string>
+    <string name="text_status">Status</string>
+    <string name="text_content">Content</string>
+    <string name="text_rating">Rating</string>
+    <string name="text_follow">Follow</string>
+</resources>
