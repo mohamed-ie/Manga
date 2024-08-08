@@ -74,12 +74,11 @@ internal fun Project.configureKotlinMultiplatformLibrary(
 ) {
     kotlinMultiplatformExtension.apply {
         configureKotlinJvm()
-        jvm()
+        jvm("desktop")
         androidTarget()
         iosX64()
         iosArm64()
         iosSimulatorArm64()
-        linuxX64()
         sourceSets.commonMain.configure {
             sourceSets {
                 kotlin.srcDir(buildConfigGenerator.map { it.destinationDir })
