@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.manage.core.common"
+    namespace = "com.manage.core.network"
 }
 
 kotlin {

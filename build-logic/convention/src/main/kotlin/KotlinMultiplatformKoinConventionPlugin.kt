@@ -1,4 +1,3 @@
-
 import com.build_logic.convention.utils.library
 import com.build_logic.convention.utils.sourceSets
 import com.google.devtools.ksp.gradle.KspExtension
@@ -20,17 +19,23 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
         }
 
         extensions.getByType<KotlinMultiplatformExtension>().sourceSets {
-            getByName("commonMain").dependencies {
-                implementation(project.dependencies.platform(library("koin.bom")))
-                implementation(library("koin.core"))
-                compileOnly(project.dependencies.platform(library("koin.annotations.bom")))
-                compileOnly(library("koin.annotations"))
+            getByName("commonMain").apply {
+                kotlin.srcDirs("build/generated/ksp/main/kotlin")
+
+                dependencies {
+                    implementation(project.dependencies.platform(library("koin.bom")))
+                    implementation(library("koin.core"))
+                    api(project.dependencies.platform(library("koin.annotations.bom")))
+                    api(library("koin.annotations"))
+                }
             }
         }
 
         dependencies {
             add("kspCommonMainMetadata", platform(library("koin.annotations.bom")))
             add("kspCommonMainMetadata", library("koin.ksp.compiler"))
+            add("kspAndroid", platform(library("koin.annotations.bom")))
+            add("kspAndroid", library("koin.ksp.compiler"))
         }
     }
 }

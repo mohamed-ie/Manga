@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
-kotlin{
+kotlin {
     androidTarget()
     jvm("desktop")
 
@@ -20,21 +20,23 @@ kotlin{
         }
     }
 
-    sourceSets{
+    sourceSets {
         val desktopMain by getting
 
-        val commonMain by getting{
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+        val androidMain by getting
+
+        val commonMain by getting {
+            kotlin.srcDirs("build/generated/ksp/main/kotlin")
         }
 
         commonMain.dependencies {
             implementation(projects.core.ui)
-
+            implementation(projects.core.data)
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
             implementation(libs.koin.compose.viewmodel)
-            implementation(project.dependencies.platform(libs.koin.annotations.bom))
+            api(project.dependencies.platform(libs.koin.annotations.bom))
             api(libs.koin.annotations)
         }
 
@@ -49,13 +51,15 @@ kotlin{
 
 ksp {
     arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-    arg("KOIN_DEFAULT_MODULE", "true")
+    arg("KOIN_DEFAULT_MODULE", "false")
 }
 
 dependencies {
     //koin
     add("kspCommonMainMetadata", platform(libs.koin.annotations.bom))
     add("kspCommonMainMetadata", libs.koin.ksp.compiler)
+    add("kspAndroid", platform(libs.koin.annotations.bom))
+    add("kspAndroid", libs.koin.ksp.compiler)
 }
 
 android {
