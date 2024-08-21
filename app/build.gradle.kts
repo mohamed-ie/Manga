@@ -32,6 +32,8 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.ui)
             implementation(projects.core.data)
+
+            implementation(projects.feature.home)
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)
@@ -51,6 +53,7 @@ kotlin {
 
 ksp {
     arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
+    arg("USE_COMPOSE_VIEWMODEL","true")
     arg("KOIN_DEFAULT_MODULE", "false")
 }
 

@@ -8,14 +8,15 @@
     <string name="text_content">Content</string>
     <string name="text_rating">Rating</string>
     <string name="text_follow">Follow</string>
-    <string name="text_chapter_number">Ch.%s</string>
+    <string name="text_chapter_number">Ch.%1$s</string>
     <string name="text_now">now</string>
-    <string name="text_short_minutes_ago">%s m</string>
-    <string name="text_short_hours_ago">%s h</string>
-    <string name="text_short_days_ago">%s d</string>
-    <string name="text_short_weeks_ago">%s w</string>
-    <string name="text_short_months_ago">%s m</string>
-    <string name="text_short_years_ago">%s y</string>
+    <string name="text_short_minutes_ago">%1$s m</string>
+    <string name="text_short_hours_ago">%1$s h</string>
+    <string name="text_short_days_ago">%1$s d</string>
+    <string name="text_short_weeks_ago">%1$s w</string>
+    <string name="text_short_months_ago">%1$s m</string>
+    <string name="text_short_years_ago">%1$s y</string>
+    <string name="core_ui_text_latest_updates">Latest updates</string>
 
     <string name="core_ui_text_explore">Explore</string>
     <string name="core_ui_text_home">Home</string>

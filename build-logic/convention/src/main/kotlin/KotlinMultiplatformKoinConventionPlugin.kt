@@ -18,24 +18,33 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
             arg("KOIN_CONFIG_CHECK", "false")
         }
 
-        extensions.getByType<KotlinMultiplatformExtension>().sourceSets {
-            getByName("commonMain").apply {
-                kotlin.srcDirs("build/generated/ksp/main/kotlin")
+        extensions.getByType<KotlinMultiplatformExtension>().apply {
+            sourceSets {
+                commonMain {
+                    kotlin.srcDirs("build/generated/ksp/main/kotlin")
 
-                dependencies {
-                    implementation(project.dependencies.platform(library("koin.bom")))
-                    implementation(library("koin.core"))
-                    api(project.dependencies.platform(library("koin.annotations.bom")))
-                    api(library("koin.annotations"))
+                    dependencies {
+                        implementation(project.dependencies.platform(library("koin.bom")))
+                        implementation(library("koin.core"))
+                        api(project.dependencies.platform(library("koin.annotations.bom")))
+                        api(library("koin.annotations"))
+                    }
                 }
+
+                androidMain.dependencies {
+                    implementation(project.dependencies.platform(library("koin.bom")))
+                    implementation(library("koin.android"))
+                }
+            }
+
+            dependencies {
+                add("kspCommonMainMetadata", platform(library("koin.annotations.bom")))
+                add("kspCommonMainMetadata", library("koin.ksp.compiler"))
+                add("kspAndroid", platform(library("koin.annotations.bom")))
+                add("kspAndroid", library("koin.ksp.compiler"))
             }
         }
 
-        dependencies {
-            add("kspCommonMainMetadata", platform(library("koin.annotations.bom")))
-            add("kspCommonMainMetadata", library("koin.ksp.compiler"))
-            add("kspAndroid", platform(library("koin.annotations.bom")))
-            add("kspAndroid", library("koin.ksp.compiler"))
-        }
+        Unit
     }
 }

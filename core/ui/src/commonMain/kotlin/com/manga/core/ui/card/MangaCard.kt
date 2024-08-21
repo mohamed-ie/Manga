@@ -1,13 +1,7 @@
 package com.manga.core.ui.card
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.manga.core.design_system.theme.MangaTheme
+import com.manga.core.model.chapter.Chapter
+import com.manga.core.model.manga.MangaDexStatus
+import com.manga.core.model.manga.MinManga
 import core.ui.com.manga.core.ui.MangaSubComposeAsyncImage
 import core.ui.com.manga.core.ui.color.LocalPublicationDemographicColor
 import core.ui.com.manga.core.ui.color.LocalStatusColors
@@ -29,26 +27,24 @@ import core.ui.com.manga.core.ui.color.containerColor
 import core.ui.com.manga.core.ui.relativeTime
 import core.ui.com.manga.core.ui.shimmer
 import kotlinx.datetime.Clock
-import com.manga.core.model.manga.MangaChapter
-import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.Status
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.text_chapter_number
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import com.manga.core.design_system.theme.MangaTheme
 
 @Composable
 fun MangaCard(
     modifier: Modifier = Modifier,
     manga: MinManga?,
     onClick: () -> Unit,
-    onChapterClick: (MangaChapter) -> Unit
+    onChapterClick: (Chapter) -> Unit
 ) {
     val publicationDemographicColors = LocalPublicationDemographicColor.current
     val statusColors = LocalStatusColors.current
     Column(
-        modifier = modifier.clickable(enabled = manga != null, onClick = onClick),
+        modifier = modifier
+            .clip(MaterialTheme.shapes.small)
+            .clickable(enabled = manga != null, onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(Modifier.weight(1f).fillMaxWidth()) {
@@ -109,17 +105,19 @@ fun MangaCard(
         )
 
         Surface(
+            modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.small
         ) {
-            Row(modifier = Modifier.fillMaxWidth()
-                .shimmer(visible = manga == null)
-                .clickable(
-                    enabled = manga != null,
-                    role = Role.Button,
-                    onClick = { manga?.lastChapter?.let { onChapterClick(it) } }
-                )
-                .padding(vertical = 4.dp, horizontal = 8.dp),
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .shimmer(visible = manga == null)
+                    .clickable(
+                        enabled = manga != null,
+                        role = Role.Button,
+                        onClick = { manga?.lastChapter?.let { onChapterClick(it) } }
+                    )
+                    .padding(vertical = 4.dp, horizontal = 8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -136,7 +134,7 @@ fun MangaCard(
                 )
 
                 Text(
-                    text = manga?.updatedAt?.relativeTime ?: "",
+                    text = manga?.lastChapter?.publishAt?.relativeTime ?: "",
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall,
@@ -155,12 +153,11 @@ fun MangaCardPreview() {
             modifier = Modifier,
             manga = MinManga(
                 id = "",
-                title = "title",
+                title = """"冴えない栞(35)の隣に【魚男】が引っ越して来て、代わり映えのない毎日が激変!! 魚男が時々超絶イケメンに見えるのはなぜ――!? そして栞の恋が動き始める…""",
                 cover = null,
-                lastChapter = MangaChapter("100", ""),
-                status = Status.CANCELED,
+                lastChapter = Chapter("100", "", Clock.System.now()),
+                status = MangaDexStatus.CANCELLED,
                 publicationDemographic = null,
-                updatedAt = Clock.System.now()
             ),
             onClick = {},
             onChapterClick = {}

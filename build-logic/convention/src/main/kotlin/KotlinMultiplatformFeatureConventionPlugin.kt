@@ -3,6 +3,7 @@ import com.android.build.api.dsl.LibraryExtension
 import com.build_logic.convention.configureKotlinMultiplatform
 import com.build_logic.convention.utils.library
 import com.build_logic.convention.utils.sourceSets
+import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
@@ -18,12 +19,13 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
             apply("org.jetbrains.kotlin.plugin.compose")
         }
 
-        val kotlinMultiplatformExtension = extensions.getByType<KotlinMultiplatformExtension>()
+        extensions.getByType<KspExtension>().apply {
+            arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
+            arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
+            arg("USE_COMPOSE_VIEWMODEL","true")
+        }
 
-        configureKotlinMultiplatform(
-            kotlinMultiplatformExtension = kotlinMultiplatformExtension,
-            commonExtension = extensions.getByType<LibraryExtension>()
-        )
+        val kotlinMultiplatformExtension = extensions.getByType<KotlinMultiplatformExtension>()
 
         kotlinMultiplatformExtension.apply {
             sourceSets {
@@ -31,11 +33,20 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                     implementation(project(":core:ui"))
                     implementation(project(":core:model"))
                     implementation(project(":core:common"))
+
+                    implementation(project.dependencies.platform(library("koin-bom")))
+                    implementation(library("koin.compose.viewmodel"))
+
                     implementation(compose("org.jetbrains.compose.components:components-resources"))
                     implementation(library("lifecycle.viewmodel.compose"))
                 }
             }
         }
-        Unit
+
+        configureKotlinMultiplatform(
+            kotlinMultiplatformExtension = kotlinMultiplatformExtension,
+            commonExtension = extensions.getByType<LibraryExtension>()
+        )
+
     }
 }

@@ -45,7 +45,7 @@ fun MangaApp(
             isOffline = isOffline
         )
 
-       // MangaNavHost(modifier = Modifier.fillMaxWidth().weight(1f), appState = appState)
+        MangaNavHost(modifier = Modifier.fillMaxWidth().weight(1f), appState = appState)
         BottomNavigation(appState)
     }
 }
