@@ -2,7 +2,7 @@ package core.ui.com.manga.core.ui.color
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.manga.core.model.manga.Status
+import com.manga.core.model.manga.MangaDexStatus
 
 data class StatusColors(
     val ongoingColor: Color = Color(0xFF4CAF50), // Green for ongoing status
@@ -17,18 +17,18 @@ data class StatusColors(
 
 val LocalStatusColors = compositionLocalOf { StatusColors() }
 
-fun StatusColors.color(status: Status) =
+fun StatusColors.color(status: MangaDexStatus) =
     when (status) {
-        Status.ONGOING -> ongoingColor
-        Status.COMPLETED -> completedColor
-        Status.HIATUS -> hiatusColor
-        Status.CANCELED -> canceledColor
+        MangaDexStatus.ONGOING -> ongoingColor
+        MangaDexStatus.COMPLETED -> completedColor
+        MangaDexStatus.HIATUS -> hiatusColor
+        MangaDexStatus.CANCELLED -> canceledColor
     }
 
-fun StatusColors.containerColor(status: Status) =
+fun StatusColors.containerColor(status: MangaDexStatus) =
     when (status) {
-        Status.ONGOING -> ongoingContainerColor
-        Status.COMPLETED -> completedContainerColor
-        Status.HIATUS -> hiatusContainerColor
-        Status.CANCELED -> canceledContainerColor
+        MangaDexStatus.ONGOING -> ongoingContainerColor
+        MangaDexStatus.COMPLETED -> completedContainerColor
+        MangaDexStatus.HIATUS -> hiatusContainerColor
+        MangaDexStatus.CANCELLED -> canceledContainerColor
     }

@@ -1,19 +1,19 @@
 package com.manga.core.network.ktor.datasource
 
 import com.manga.core.common.Resource
-import com.manga.core.network.datasource.MangaDexMangaNetworkDataSource
-import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import com.manga.core.network.ktor.apiCall
 import com.manga.core.model.manga.request.MangaChaptersRequest
 import com.manga.core.model.manga.request.MangaListRequest
 import com.manga.core.model.manga.request.MangaRequest
-import org.koin.core.annotation.Single
+import com.manga.core.network.datasource.MangaDexMangaNetworkDataSource
+import com.manga.core.network.ktor.apiCall
 import com.manga.core.network.response.MangaDexErrorResponse
 import com.manga.core.network.response.manga.MangaChaptersResponse
 import com.manga.core.network.response.manga.MangaListResponse
 import com.manga.core.network.response.manga.MangaResponse
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import org.koin.core.annotation.Single
 
 
 @Single
@@ -24,7 +24,7 @@ internal class KtorMangaDexMangaNetwork(
         request: MangaListRequest
     ): Resource<MangaListResponse, MangaDexErrorResponse> =
         client.apiCall {
-            get("com/manga/core/model/manga") {
+            get("manga") {
                 parameter("title", request.title)
                 request.authors?.forEach { parameter("authors[]", it) }
                 parameter("authorOrArtist", request.authorOrArtist)

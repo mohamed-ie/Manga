@@ -1,8 +1,8 @@
 package com.manga.core.model.manga
 
-enum class Status {
+enum class MangaDexStatus {
     ONGOING,
     COMPLETED,
     HIATUS,
-    CANCELED,
+    CANCELLED,
 }

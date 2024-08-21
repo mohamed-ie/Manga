@@ -2,6 +2,7 @@ package com.manga.app.app.navigation
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.manga.core.design_system.icons.MangaIcons
+import com.manga.feature.home.navigation.HOME_NAVIGATION_ROUTE
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.core_ui_text_explore
 import manga.core.ui.generated.resources.core_ui_text_home
@@ -16,7 +17,7 @@ enum class TopLevelDestination(
     val unselectedIcon:ImageVector
 ) {
     HOME(
-        route = "",
+        route = HOME_NAVIGATION_ROUTE,
         labelResource = Res.string.core_ui_text_home,
         selectedIcon = MangaIcons.NavigationBar.homeSelected,
         unselectedIcon = MangaIcons.NavigationBar.homeUnselected

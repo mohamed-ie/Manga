@@ -1,26 +1,25 @@
 package com.manga.core.network.response.manga
 
-import core.common.com.manga.core.common.Pageable
 import com.manga.core.common.ext.filterValuesNotNull
-import kotlinx.datetime.Instant
-import kotlinx.serialization.Serializable
+import com.manga.core.model.chapter.Chapter
 import com.manga.core.model.manga.Manga
-import com.manga.core.model.manga.MangaChapter
 import com.manga.core.model.manga.MangaDexContentRating
 import com.manga.core.model.manga.MangaDexPublicationDemographic
+import com.manga.core.model.manga.MangaDexStatus
 import com.manga.core.model.manga.MangaDexTagGroup
 import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.Status
+import com.manga.core.network.response.common.PageableResponse
+import com.manga.core.network.response.common.nextKey
+import com.manga.core.network.response.common.previousKey
+import core.common.com.manga.core.common.Pageable
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class MangaListResponse(
     val result: String? = null,
-    val total: Int? = null,
     val data: List<Manga?>? = null,
-    val offset: Int? = null,
     val response: String? = null,
-    val limit: Int? = null
-) {
+) : PageableResponse() {
 
     @Serializable
     data class Manga(
@@ -79,28 +78,26 @@ data class MangaListResponse(
     )
 }
 
-fun MangaListResponse.asPageable(languageTag: String) = Pageable(
+fun MangaListResponse.asPageableManga() = Pageable(
     data = data
         ?.filterNotNull()
-        ?.mapNotNull { it.asMinManga(languageTag) }
+        ?.mapNotNull { it.asManga() }
         ?: emptyList(),
-    nextKey = offset?.plus(limit ?: 0)?.coerceIn(0, total)
-        ?.let { if (offset == total) null else it },
-    previousKey = offset?.minus(limit ?: 0)?.coerceIn(0, total)
-        ?.let { if (offset == 0) null else it },
+    nextKey = nextKey,
+    previousKey = previousKey,
     totalCount = total ?: 0
 )
 
-private fun MangaListResponse.Manga.asMinManga(languageTag: String): MinManga? {
+private fun MangaListResponse.Manga.asMinManga(languageTag: String,lastChapter: Chapter?): MinManga? {
     return MinManga(
         id = id ?: return null,
         title = attributes?.title
             ?.run { this[languageTag] ?: values.firstOrNull { it != null } }
             ?: "",
         cover = relationships?.filterNotNull()?.cover256(mangaId = id),
-        lastChapter = attributes?.lastChapter?.let { MangaChapter("", it) },
-        status = attributes?.status?.uppercase()?.let(Status::valueOf) ?: Status.ONGOING,
-        updatedAt = attributes?.updatedAt?.let(Instant::parse),
+        lastChapter = lastChapter,
+        status = attributes?.status?.uppercase()?.let(MangaDexStatus::valueOf)
+            ?: MangaDexStatus.ONGOING,
         publicationDemographic = attributes?.publicationDemographic?.uppercase()
             ?.let(MangaDexPublicationDemographic::valueOf)
     )
@@ -133,11 +130,13 @@ fun MangaListResponse.Manga.asManga(): Manga? {
 
         status = attributes?.status
             ?.uppercase()
-            ?.let(Status::valueOf),
+            ?.let(MangaDexStatus::valueOf),
 
         contentRating = attributes?.contentRating
             ?.uppercase()
-            ?.let(MangaDexContentRating::valueOf)
+            ?.let(MangaDexContentRating::valueOf),
+        publicationDemographic = attributes?.publicationDemographic?.uppercase()?.let(MangaDexPublicationDemographic::valueOf),
+        latestUploadedChapterId = attributes?.latestUploadedChapter
     )
 }
 

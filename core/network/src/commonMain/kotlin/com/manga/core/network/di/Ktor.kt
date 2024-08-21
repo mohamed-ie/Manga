@@ -10,8 +10,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.koin.core.annotation.Single
 import network.BuildConfig
+import org.koin.core.annotation.Single
 
 @Single
 internal fun httpClick() = HttpClient() {

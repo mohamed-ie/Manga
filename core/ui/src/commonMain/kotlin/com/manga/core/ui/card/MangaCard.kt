@@ -21,6 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.manga.core.design_system.theme.MangaTheme
+import com.manga.core.model.chapter.Chapter
+import com.manga.core.model.manga.MangaDexStatus
+import com.manga.core.model.manga.MinManga
 import core.ui.com.manga.core.ui.MangaSubComposeAsyncImage
 import core.ui.com.manga.core.ui.color.LocalPublicationDemographicColor
 import core.ui.com.manga.core.ui.color.LocalStatusColors
@@ -29,26 +33,23 @@ import core.ui.com.manga.core.ui.color.containerColor
 import core.ui.com.manga.core.ui.relativeTime
 import core.ui.com.manga.core.ui.shimmer
 import kotlinx.datetime.Clock
-import com.manga.core.model.manga.MangaChapter
-import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.Status
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.text_chapter_number
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import com.manga.core.design_system.theme.MangaTheme
 
 @Composable
 fun MangaCard(
     modifier: Modifier = Modifier,
     manga: MinManga?,
     onClick: () -> Unit,
-    onChapterClick: (MangaChapter) -> Unit
+    onChapterClick: (Chapter) -> Unit
 ) {
     val publicationDemographicColors = LocalPublicationDemographicColor.current
     val statusColors = LocalStatusColors.current
     Column(
-        modifier = modifier.clickable(enabled = manga != null, onClick = onClick),
+        modifier = modifier.clip(MaterialTheme.shapes.small)
+            .clickable(enabled = manga != null, onClick = onClick),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(Modifier.weight(1f).fillMaxWidth()) {
@@ -136,7 +137,7 @@ fun MangaCard(
                 )
 
                 Text(
-                    text = manga?.updatedAt?.relativeTime ?: "",
+                    text = manga?.lastChapter?.publishAt?.relativeTime ?: "",
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     style = MaterialTheme.typography.bodySmall,
@@ -157,10 +158,9 @@ fun MangaCardPreview() {
                 id = "",
                 title = "title",
                 cover = null,
-                lastChapter = MangaChapter("100", ""),
-                status = Status.CANCELED,
+                lastChapter = Chapter("100", "", Clock.System.now()),
+                status = MangaDexStatus.CANCELLED,
                 publicationDemographic = null,
-                updatedAt = Clock.System.now()
             ),
             onClick = {},
             onChapterClick = {}

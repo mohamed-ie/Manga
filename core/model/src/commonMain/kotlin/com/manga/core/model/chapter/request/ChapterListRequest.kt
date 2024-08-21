@@ -1,4 +1,4 @@
-package com.manga.core.model.manga.request
+package com.manga.core.model.chapter.request
 
 import com.manga.core.model.manga.MangaDexContentRating
 import com.manga.core.model.manga.MangaDexIncludes
@@ -7,7 +7,8 @@ import com.manga.core.model.manga.MangaDexMode
 import com.manga.core.model.manga.MangaDexPublicationDemographic
 import com.manga.core.model.manga.MangaDexStatus
 
-data class MangaListRequest(
+
+data class ChapterListRequest(
     val title: String? = null,
     val authorOrArtist: String? = null,
     val authors: List<String>? = null,
@@ -31,5 +32,5 @@ data class MangaListRequest(
     val hasAvailableChapters: Boolean? = null,
     val group: String? = null,
     val offset: Int = 0,
-    val limit: Int = 100
+    val limit: Int = 100,
 )
