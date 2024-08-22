@@ -53,12 +53,12 @@ internal fun HomeRoute(viewModel: HomeViewModel = koinViewModel()) {
         viewModel.initialize()
     }
 
-    HomeScreen(
-        modifier = Modifier,
-        latestUpdates = latestUpdates,
-        hightestRatingManga = hightestRatingManga,
-        recentlyAddedManga = recentlyAddedManga
-    )
+//    HomeScreen(
+//        modifier = Modifier,
+//        latestUpdates = latestUpdates,
+//        hightestRatingManga = hightestRatingManga,
+//        recentlyAddedManga = recentlyAddedManga
+//    )
 }
 
 @Composable
