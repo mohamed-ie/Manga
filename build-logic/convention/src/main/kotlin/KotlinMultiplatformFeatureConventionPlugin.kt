@@ -1,6 +1,4 @@
 
-import com.android.build.api.dsl.LibraryExtension
-import com.build_logic.convention.configureKotlinMultiplatform
 import com.build_logic.convention.utils.library
 import com.build_logic.convention.utils.sourceSets
 import com.google.devtools.ksp.gradle.KspExtension
@@ -42,11 +40,6 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 }
             }
         }
-
-        configureKotlinMultiplatform(
-            kotlinMultiplatformExtension = kotlinMultiplatformExtension,
-            commonExtension = extensions.getByType<LibraryExtension>()
-        )
-
+        Unit
     }
 }

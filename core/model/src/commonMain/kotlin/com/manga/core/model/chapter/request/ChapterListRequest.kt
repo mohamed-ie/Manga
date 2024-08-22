@@ -1,36 +1,44 @@
 package com.manga.core.model.chapter.request
 
+import com.manga.core.model.common.MangaDexOrder
 import com.manga.core.model.manga.MangaDexContentRating
-import com.manga.core.model.manga.MangaDexIncludes
-import com.manga.core.model.manga.MangaDexMangaOrder
-import com.manga.core.model.manga.MangaDexMode
-import com.manga.core.model.manga.MangaDexPublicationDemographic
-import com.manga.core.model.manga.MangaDexStatus
+import com.manga.core.model.common.MangaDexIncludes
+import com.manga.core.model.common.MangaDexSortedOrder
+import kotlinx.datetime.Instant
 
 
 data class ChapterListRequest(
     val title: String? = null,
-    val authorOrArtist: String? = null,
-    val authors: List<String>? = null,
-    val artists: List<String>? = null,
-    val year: Int? = null,
-    val includedTags: List<String>? = null,
-    val includedTagsMode: MangaDexMode? = null,
-    val excludedTags: List<String>? = null,
-    val excludedTagsMode: MangaDexMode? = null,
-    val status: List<MangaDexStatus>? = null,
+    val groupIds: List<String>? = null,
+    val ids: List<String>? = null,
+    val uploaderIds: List<String>? = null,
+    val mangaId: String? = null,
+    val volumeIds: List<String>? = null,
+    val chapterIds: List<String>? = null,
+    val translatedLanguage: List<String>? = null,
     val originalLanguage: List<String>? = null,
     val excludedOriginalLanguage: List<String>? = null,
-    val availableTranslatedLanguage: List<String>? = null,
-    val publicationDemographic: List<MangaDexPublicationDemographic>? = null,
-    val ids: List<String>? = null,
-    val contentRating: List<MangaDexContentRating>? = listOf(MangaDexContentRating.SAFE),
-    val createdAtSince: String? = null,
-    val updatedAtSince: String? = null,
-    val order: List<MangaDexMangaOrder>? = null,
-    val includes: List<MangaDexIncludes>? = listOf(MangaDexIncludes.COVER_ART),
-    val hasAvailableChapters: Boolean? = null,
-    val group: String? = null,
+    val contentRating: List<MangaDexContentRating>? = null,
+    val excludedGroupIds: List<String>? = null,
+    val excludedUploaderIds: List<String>? = null,
+    val includeFutureUpdates: Boolean? = null,
+    val includeEmptyPages: Boolean? = null,
+    val includeFuturePublishAt: Boolean? = null,
+    val includeExternalUrl: Boolean? = null,
+    val createdAtSince: Instant? = null,
+    val updatedAtSince: Instant? = null,
+    val publishAtSince: Instant? = null,
+    val order: List<MangaDexSortedOrder<Order>>? = null,
+    val includes: List<MangaDexChapterIncludes>? = null,
     val offset: Int = 0,
     val limit: Int = 100,
-)
+) {
+
+    sealed class Order(override val value: String) : MangaDexOrder {
+        data object CreatedAt : Order("createdAt")
+        data object UpdatedAt : Order("updatedAt")
+        data object ReadableAt : Order("readableAt")
+        data object Volume : Order("volume")
+        data object Chapter : Order("chapter")
+    }
+}

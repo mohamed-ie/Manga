@@ -1,8 +1,8 @@
-package core.ui.com.manga.core.ui
+package com.manga.core.ui
 
 import androidx.compose.runtime.Composable
-import core.ui.com.manga.core.ui.UiText.Plain
-import core.ui.com.manga.core.ui.UiText.Resource
+import com.manga.core.ui.UiText.Plain
+import com.manga.core.ui.UiText.Resource
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource

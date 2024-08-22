@@ -1,4 +1,4 @@
-package core.ui.com.manga.core.ui
+package com.manga.core.ui
 
 import com.manga.core.common.Resource
 import com.manga.core.common.onFailure

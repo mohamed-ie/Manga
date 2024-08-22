@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MangaResponse(
-    val result: String?,
-    val response:String?,
-    val data: MangaListResponse.Manga?
+    val result: String? = null,
+    val response: String? = null,
+    val data: MangaDto? = null
 )

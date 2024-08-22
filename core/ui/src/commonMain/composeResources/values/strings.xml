@@ -24,4 +24,12 @@
     <string name="core_ui_text_more">More</string>
     <string name="core_ui_text_no_internet_connection">No internet connection</string>
     <string name="core_ui_text_back_online">Back online</string>
+    <string name="core_ui_content_description_view_more">View more</string>
+    <string name="core_ui_text_new_manga">New Manga</string>
+    <string name="core_ui_text_popular_this_year">Popular this year</string>
+    <string name="core_ui_text_new_popular">New popular</string>
+    <string name="core_ui_action_retry">Retry</string>
+    <string name="core_ui_content_description_follows">Follows</string>
+    <string name="core_ui_content_description_rating">Rating</string>
+
 </resources>

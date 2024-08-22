@@ -12,14 +12,14 @@ android {
 kotlin{
     sourceSets{
         val commonMain by getting
-
         commonMain.dependencies {
             api(projects.core.designSystem)
             api(projects.core.model)
             api(projects.core.common)
-            implementation(compose.components.resources)
+            api(compose.components.resources)
 
             implementation(libs.paging.common)
+            api(libs.kotlinx.datetime)
 
             //coil
             api(libs.coil)

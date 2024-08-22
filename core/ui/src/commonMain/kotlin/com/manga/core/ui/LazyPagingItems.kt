@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-package core.ui.com.manga.core.ui
+package com.manga.core.ui
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.LoadStates
+import androidx.compose.runtime.*
+import androidx.paging.*
 import androidx.paging.PagingData
-import androidx.paging.PagingDataEvent
-import androidx.paging.PagingDataPresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow

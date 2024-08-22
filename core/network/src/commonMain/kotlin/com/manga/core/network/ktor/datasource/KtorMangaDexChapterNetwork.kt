@@ -8,6 +8,7 @@ import com.manga.core.network.ktor.apiCall
 import com.manga.core.network.response.MangaDexErrorResponse
 import com.manga.core.network.response.chapter.ChapterListResponse
 import com.manga.core.network.response.chapter.ChapterResponse
+import com.manga.core.network.serverDateTimeFormat
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -27,27 +28,28 @@ internal class KtorMangaDexChapterNetwork(
     override suspend fun chapterList(request: ChapterListRequest): Resource<ChapterListResponse, MangaDexErrorResponse> =
         client.apiCall {
             get("chapter") {
+                request.ids?.forEach { parameter("ids[]", it)}
                 parameter("title", request.title)
-                request.authors?.forEach { parameter("authors[]", it) }
-                parameter("authorOrArtist", request.authorOrArtist)
-                request.artists?.forEach { parameter("artists[]", it) }
-                parameter("year", request.year)
-                request.includedTags?.forEach { parameter("includedTags[]", it)}
-                parameter("includedTagsMode", request.includedTagsMode)
-                request.excludedTags?.forEach { parameter("excludedTags[]", it)}
-                parameter("excludedTagsMode", request.excludedTagsMode)
-                request.status?.forEach { parameter("status[]", it)}
+                request.groupIds?.forEach { parameter("group[]", it)}
+                request.uploaderIds?.forEach { parameter("uploader[]", it) }
+                parameter("manga", request.mangaId)
+                request.volumeIds?.forEach { parameter("volume[]", it) }
+                request.chapterIds?.forEach { parameter("chapter[]", it)}
+                request.translatedLanguage?.forEach { parameter("translatedLanguage[]", it)}
                 request.originalLanguage?.forEach { parameter("originalLanguage[]", it)}
                 request.excludedOriginalLanguage?.forEach { parameter("excludedOriginalLanguage[]", it)}
-                request.availableTranslatedLanguage?.forEach { parameter("availableTranslatedLanguage[]", it)}
-                request.publicationDemographic?.forEach { parameter("publicationDemographic[]", it)}
-                request.ids?.forEach { parameter("ids[]", it)}
                 request.contentRating?.forEach { parameter("contentRating[]", it)}
-                parameter("createdAtSince", request.createdAtSince)
-                parameter("updatedAtSince", request.updatedAtSince)
-                request.includes?.forEach { parameter("includes[]", it)}
-                parameter("hasAvailableChapters", request.hasAvailableChapters)
-                parameter("group", request.group)
+                request.excludedGroupIds?.forEach { parameter("excludedGroups[]", it)}
+                request.excludedUploaderIds?.forEach { parameter("excludedUploaders[]", it)}
+                parameter("includeFutureUpdates", request.includeFutureUpdates)
+                parameter("includeEmptyPages", request.includeEmptyPages)
+                parameter("includeFuturePublishAt", request.includeFuturePublishAt)
+                parameter("includeExternalUrl", request.includeExternalUrl)
+                parameter("createdAtSince", request.createdAtSince?.serverDateTimeFormat)
+                parameter("updatedAtSince", request.updatedAtSince?.serverDateTimeFormat)
+                parameter("publishAtSince", request.publishAtSince?.serverDateTimeFormat)
+                request.order?.forEach { parameter("order[${it.order.value}]", it.mangaDexSortOrder.name.lowercase())}
+                request.includes?.forEach { parameter("includes[]", it.value)}
                 parameter("offset", request.offset)
                 parameter("limit", request.limit)
             }

@@ -1,11 +1,11 @@
 package com.manga.core.model
 
-import com.manga.core.model.manga.Manga
+import com.manga.core.model.common.MangaDexManga
 import com.manga.core.model.manga.MangaVolume
-import com.manga.core.model.statistics.MangaStatistics
+import com.manga.core.model.statistics.MinMangaStatistics
 
 data class MangaDetails(
-    val manga: Manga,
+    val manga: MangaDexManga,
     val volumes: List<MangaVolume>,
-    val statistics: MangaStatistics
+    val statistics: MinMangaStatistics
 )

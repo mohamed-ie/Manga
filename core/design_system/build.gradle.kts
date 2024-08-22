@@ -7,6 +7,7 @@ plugins {
 
 android {
     namespace = "org.manage.core.design_system"
+
     dependencies {
         debugApi(compose.uiTooling)
     }
@@ -20,13 +21,15 @@ kotlin{
 
         commonMain.dependencies {
             api(compose.runtime)
+            api(compose.animation)
+            api(compose.animationGraphics)
             api(compose.foundation)
             api(compose.material3)
-            api(compose.materialIconsExtended)
             api(compose.ui)
             api(compose.components.resources)
             api(compose.components.uiToolingPreview)
             api(compose.uiUtil)
+            implementation(compose.materialIconsExtended)
         }
 
         androidMain.dependencies {

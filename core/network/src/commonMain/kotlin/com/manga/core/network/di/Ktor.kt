@@ -1,5 +1,11 @@
 package com.manga.core.network.di
 
+import com.manga.core.network.response.common.ChapterRelationship
+import com.manga.core.network.response.common.MangaRelationship
+import com.manga.core.network.response.common.NoAttributeRelationship
+import com.manga.core.network.response.common.RelationshipDto
+import com.manga.core.network.response.common.ScanlationGroupRelationship
+import com.manga.core.network.response.common.UserRelationship
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -10,6 +16,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import network.BuildConfig
 import org.koin.core.annotation.Single
 
@@ -42,4 +51,14 @@ private val MangaJson = Json {
     prettyPrint = false
     useArrayPolymorphism = false
     ignoreUnknownKeys = true
+    serializersModule = SerializersModule {
+        polymorphic(baseClass = RelationshipDto::class) {
+            subclass(MangaRelationship::class)
+            subclass(ChapterRelationship::class)
+            subclass(UserRelationship::class)
+            subclass(ScanlationGroupRelationship::class)
+            subclass(ChapterRelationship::class)
+            defaultDeserializer { NoAttributeRelationship.serializer() }
+        }
+    }
 }

@@ -10,6 +10,7 @@ import com.manga.core.network.response.MangaDexErrorResponse
 import com.manga.core.network.response.manga.MangaChaptersResponse
 import com.manga.core.network.response.manga.MangaListResponse
 import com.manga.core.network.response.manga.MangaResponse
+import com.manga.core.network.serverDateTimeFormat
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -28,7 +29,7 @@ internal class KtorMangaDexMangaNetwork(
                 request.order?.forEach {
                     parameter(
                         "order[${it.order.value}]",
-                        it.sortOrder.name.lowercase()
+                        it.mangaDexSortOrder.name.lowercase()
                     )
                 }
                 request.authors?.forEach { parameter("authors[]", it) }
@@ -46,9 +47,9 @@ internal class KtorMangaDexMangaNetwork(
                 request.publicationDemographic?.forEach { parameter("publicationDemographic[]", it) }
                 request.ids?.forEach { parameter("ids[]", it) }
                 request.contentRating?.forEach { parameter("contentRating[]", it) }
-                parameter("createdAtSince", request.createdAtSince)
-                parameter("updatedAtSince", request.updatedAtSince)
-                request.includes?.forEach { parameter("includes[]", it) }
+                parameter("createdAtSince", request.createdAtSince?.serverDateTimeFormat)
+                parameter("updatedAtSince", request.updatedAtSince?.serverDateTimeFormat)
+                request.includes?.forEach { parameter("includes[]", it.value) }
                 parameter("hasAvailableChapters", request.hasAvailableChapters)
                 parameter("group", request.group)
                 parameter("offset", request.offset)

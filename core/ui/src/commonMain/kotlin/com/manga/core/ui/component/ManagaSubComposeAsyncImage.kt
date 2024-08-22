@@ -1,4 +1,4 @@
-package core.ui.com.manga.core.ui
+package com.manga.core.ui.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +16,7 @@ import coil3.compose.DefaultModelEqualityDelegate
 import coil3.compose.EqualityDelegate
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageScope
+import com.manga.core.ui.shimmer
 
 @Composable
 fun MangaSubComposeAsyncImage(

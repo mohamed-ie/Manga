@@ -8,10 +8,9 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.resources.TextResource
 import org.gradle.api.tasks.Sync
 import org.gradle.kotlin.dsl.register
-import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
 fun Project.configureKotlinAndroid(
@@ -19,6 +18,7 @@ fun Project.configureKotlinAndroid(
 ) {
     commonExtension.apply {
         compileSdk = versionInt("android-compileSdk")
+
         defaultConfig {
             minSdk = versionInt("android-minSdk")
         }
@@ -33,40 +33,52 @@ fun Project.configureKotlinAndroid(
             }
         }
     }
-    configureKotlin()
 }
 
-internal fun Project.configureKotlinJvm() {
-    kotlinExtension.jvmToolchain(17)
-}
-
-private fun Project.configureKotlin() {
-    configureKotlinJvm()
-
-    tasks.withType<KotlinCompile> {
-        compilerOptions.freeCompilerArgs.addAll(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
-            "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
-            "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
-            "-Xcontext-receivers"
-        )
+fun Project.configureKotlinAndroidCompose(
+    commonExtension: CommonExtension<*, *, *, *, *, *>
+) {
+    commonExtension.apply {
+        buildFeatures {
+            compose = true
+        }
     }
+
+    configureKotlinAndroid(commonExtension)
 }
 
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 internal fun Project.configureKotlinMultiplatform(
     kotlinMultiplatformExtension: KotlinMultiplatformExtension,
     commonExtension: CommonExtension<*, *, *, *, *, *>
 ) {
     kotlinMultiplatformExtension.apply {
-        configureKotlinJvm()
-    }
+        sourceSets.commonMain.configure {
+            sourceSets {
+                kotlin.srcDir(buildConfigGenerator.map { it.destinationDir })
+            }
+        }
 
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.FlowPreview",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+                "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi",
+                "-opt-in=androidx.compose.foundation.layout.ExperimentalLayoutApi",
+                "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
+                "-Xcontext-receivers"
+            )
+        }
+    }
+    configureKotlinJvm()
     configureKotlinAndroid(commonExtension)
+}
+
+internal fun Project.configureKotlinJvm() {
+    kotlinExtension.jvmToolchain(17)
 }
 
 internal fun Project.configureKotlinMultiplatformLibrary(
@@ -74,19 +86,14 @@ internal fun Project.configureKotlinMultiplatformLibrary(
     commonExtension: CommonExtension<*, *, *, *, *, *>
 ) {
     kotlinMultiplatformExtension.apply {
-        configureKotlinJvm()
         jvm("desktop")
         androidTarget()
         iosX64()
         iosArm64()
         iosSimulatorArm64()
-        sourceSets.commonMain.configure {
-            sourceSets {
-                kotlin.srcDir(buildConfigGenerator.map { it.destinationDir })
-            }
-        }
     }
-    configureKotlinAndroid(commonExtension)
+
+    configureKotlinMultiplatform(kotlinMultiplatformExtension, commonExtension)
 }
 
 val Project.buildConfigGenerator
@@ -107,6 +114,7 @@ val Project.buildConfigGenerator
           |object BuildConfig {
           |  const val PROJECT_VERSION = "$version"
           |  const val MANGA_DEX_URL = "${properties["MANGA_DEX_URL"]}"
+          |  const val MANGA_DEX_COVER_URL = "${properties["MANGA_DEX_COVER_URL"]}"
           |  const val DEBUG = ${project.hasProperty("debug") && project.property("debug") == "true"}
           |}
           |

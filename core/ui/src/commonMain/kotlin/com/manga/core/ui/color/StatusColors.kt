@@ -1,4 +1,4 @@
-package core.ui.com.manga.core.ui.color
+package com.manga.core.ui.color
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color

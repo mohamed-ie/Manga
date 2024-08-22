@@ -1,4 +1,4 @@
-package core.ui.com.manga.core.ui
+package com.manga.core.ui
 
 import androidx.compose.runtime.Composable
 import kotlinx.datetime.Clock
@@ -17,7 +17,7 @@ import org.jetbrains.compose.resources.stringResource
 
 val Instant.relativeTime
     @Composable
-    get() = periodUntil(Clock.System.now(), TimeZone.currentSystemDefault()).run {
+    get() = periodUntil(Clock.System.now(), TimeZone.UTC).run {
         if (years > 1)
             return@run stringResource(Res.string.text_short_years_ago, years)
 
@@ -25,7 +25,7 @@ val Instant.relativeTime
             return@run stringResource(Res.string.text_short_months_ago, months)
 
         if (days > 6)
-            return@run stringResource(Res.string.text_short_weeks_ago, days % 7)
+            return@run stringResource(Res.string.text_short_weeks_ago, days / 7)
 
         if (days > 1)
             return@run stringResource(Res.string.text_short_days_ago, days)

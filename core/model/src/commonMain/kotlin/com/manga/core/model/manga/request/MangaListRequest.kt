@@ -1,11 +1,13 @@
 package com.manga.core.model.manga.request
 
+import com.manga.core.model.common.MangaDexOrder
 import com.manga.core.model.manga.MangaDexContentRating
-import com.manga.core.model.manga.MangaDexIncludes
-import com.manga.core.model.manga.MangaDexMangaOrder
-import com.manga.core.model.manga.MangaDexMode
+import com.manga.core.model.common.MangaDexIncludes
+import com.manga.core.model.common.MangaDexSortedOrder
+import com.manga.core.model.common.MangaDexMode
 import com.manga.core.model.manga.MangaDexPublicationDemographic
 import com.manga.core.model.manga.MangaDexStatus
+import kotlinx.datetime.Instant
 
 data class MangaListRequest(
     val title: String? = null,
@@ -23,13 +25,25 @@ data class MangaListRequest(
     val availableTranslatedLanguage: List<String>? = null,
     val publicationDemographic: List<MangaDexPublicationDemographic>? = null,
     val ids: List<String>? = null,
-    val contentRating: List<MangaDexContentRating>? = listOf(MangaDexContentRating.SAFE),
-    val createdAtSince: String? = null,
-    val updatedAtSince: String? = null,
-    val order: List<MangaDexMangaOrder>? = null,
-    val includes: List<MangaDexIncludes>? = listOf(MangaDexIncludes.COVER_ART),
+    val contentRating: List<MangaDexContentRating>? = null,
+    val createdAtSince: Instant? = null,
+    val updatedAtSince: Instant? = null,
+    val order: List<MangaDexSortedOrder<Order>>? = null,
+    val includes: List<MangaDexMangaIncludes>? = listOf(MangaDexMangaIncludes.CoverArt),
     val hasAvailableChapters: Boolean? = null,
     val group: String? = null,
     val offset: Int = 0,
     val limit: Int = 100
-)
+) {
+
+    sealed class Order(override val value: String) : MangaDexOrder {
+        data object Title : Order("title")
+        data object Year : Order("year")
+        data object CreatedAt : Order("createdAt")
+        data object UpdatedAt : Order("updatedAt")
+        data object LatestUploadedChapter : Order("latestUploadedChapter")
+        data object FollowedCount : Order("followedCount")
+        data object Relevance : Order("relevance")
+        data object Rating : Order("rating")
+    }
+}
