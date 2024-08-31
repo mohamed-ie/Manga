@@ -4,7 +4,6 @@ import com.manga.core.model.common.MangaDexCover
 import com.manga.core.network.asInstant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import network.BuildConfig
 
 @Serializable
 @SerialName("cover_art")

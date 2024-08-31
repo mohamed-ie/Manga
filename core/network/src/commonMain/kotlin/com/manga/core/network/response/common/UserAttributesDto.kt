@@ -26,12 +26,3 @@ fun UserRelationship.asMangaDexModel(): MangaDexUser? {
         )
     }
 }
-
-fun UserRelationship.Attributes.asMangaDexModel(): MangaDexUser? {
-    return MangaDexUser(
-        id = id ?: return null,
-        username = username ?: "",
-        roles = roles?.filterNotNull() ?: emptyList(),
-        version = version
-    )
-}

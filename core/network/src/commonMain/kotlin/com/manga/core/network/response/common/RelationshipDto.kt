@@ -2,7 +2,6 @@ package com.manga.core.network.response.common
 
 import com.manga.core.model.common.MangaDexLink
 import com.manga.core.model.common.MangaDexLocalizedString
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,13 +21,6 @@ internal val Map.Entry<String?, String?>.asMangaDexLink: MangaDexLink?
         )
     }
 
-internal val Map.Entry<String?, String?>.asMangaDexLocalizedString: MangaDexLocalizedString?
-    get() {
-        return MangaDexLocalizedString(
-            locale = key ?: return null,
-            value = value ?: return null,
-        )
-    }
 internal val Map<String?, String?>.asMangaDexLocalizedString: MangaDexLocalizedString?
     get() {
         return firstNotNullOfOrNull {(key,value) ->

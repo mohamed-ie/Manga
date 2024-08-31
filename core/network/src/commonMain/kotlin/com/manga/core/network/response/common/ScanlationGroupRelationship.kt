@@ -38,30 +38,28 @@ data class ScanlationGroupRelationship(
 }
 
 fun ScanlationGroupRelationship.asMangaDexModel(): MangaDexScanlationGroup? =
-    attributes?.asMangaDexModel()
-
-fun ScanlationGroupRelationship.Attributes.asMangaDexModel(): MangaDexScanlationGroup? {
-    return MangaDexScanlationGroup(
-        id = id ?: return null,
-        name = name ?: "",
-        altNames = altNames?.filterNotNull() ?: emptyList(),
-        locked = locked,
-        website = website,
-        ircServer = ircServer,
-        ircChannel = ircChannel,
-        discord = discord,
-        contactEmail = contactEmail,
-        description = description,
-        twitter = twitter,
-        mangaUpdates = mangaUpdates,
-        focusedLanguages = focusedLanguages?.filterNotNull() ?: emptyList(),
-        official = official,
-        verified = verified,
-        inactive = inactive,
-        publishDelay = publishDelay,
-        exLicensed = exLicensed,
-        createdAt = createdAt?.asInstant(),
-        updatedAt = updatedAt?.asInstant(),
-        version = version
-    )
-}
+    attributes?.run {
+        MangaDexScanlationGroup(
+            id = id ?: return null,
+            name = name ?: "",
+            altNames = altNames?.filterNotNull() ?: emptyList(),
+            locked = locked,
+            website = website,
+            ircServer = ircServer,
+            ircChannel = ircChannel,
+            discord = discord,
+            contactEmail = contactEmail,
+            description = description,
+            twitter = twitter,
+            mangaUpdates = mangaUpdates,
+            focusedLanguages = focusedLanguages?.filterNotNull() ?: emptyList(),
+            official = official,
+            verified = verified,
+            inactive = inactive,
+            publishDelay = publishDelay,
+            exLicensed = exLicensed,
+            createdAt = createdAt?.asInstant(),
+            updatedAt = updatedAt?.asInstant(),
+            version = version
+        )
+    }

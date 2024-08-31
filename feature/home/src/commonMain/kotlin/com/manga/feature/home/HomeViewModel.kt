@@ -47,7 +47,8 @@ internal class HomeViewModel(
                     order = listOf(MangaDexSortedOrder(MangaListRequest.Order.FollowedCount)),
                     createdAtSince = Clock.System.now().minus(1, DateTimeUnit.MONTH, TimeZone.UTC),
                     limit = 10
-                )
+                ),
+                withStatistics = true
             ).getOrThrow()
 
             val newRelease = mangaCentralRepository.minMangaList(
@@ -68,9 +69,11 @@ internal class HomeViewModel(
             ).getOrThrow()
 
             val latestUpdates = mangaCentralRepository.minMangaList(
-                request = ChapterListRequest(limit = 24,
+                request = ChapterListRequest(
+                    limit = 24,
                     order = listOf(ChapterListRequest.Order.ReadableAt.descOrder)
-                )
+                ),
+                withStatistics = true
             ).getOrThrow()
 
             _uiState.value = HomeUiState.Success(
