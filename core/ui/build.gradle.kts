@@ -17,6 +17,8 @@ kotlin{
             api(projects.core.model)
             api(projects.core.common)
             api(compose.components.resources)
+            api(libs.lifecycle.viewmodel.compose)
+            implementation(libs.kotlinx.coroutines.core)
 
             implementation(libs.paging.common)
             api(libs.kotlinx.datetime)
@@ -26,6 +28,10 @@ kotlin{
             api(libs.coil.compose)
             api(libs.coil.compose.core)
             api(libs.coil.network.ktor2)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
         }
     }
 }

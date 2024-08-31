@@ -31,5 +31,7 @@
     <string name="core_ui_action_retry">Retry</string>
     <string name="core_ui_content_description_follows">Follows</string>
     <string name="core_ui_content_description_rating">Rating</string>
+    <string name="core_ui_message_unexpected_exception">Unexpected exception occurred please try again later</string>
+
 
 </resources>

@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,8 @@ import com.manga.core.ui.component.LoadingContent
 import com.manga.core.ui.component.MangaScreen
 import com.manga.core.ui.component.MangaScreenState
 import com.manga.core.ui.component.rememberMangaScreenState
+import com.manga.core.ui.success
+import kotlinx.coroutines.flow.onEach
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.core_ui_content_description_view_more
 import manga.core.ui.generated.resources.core_ui_text_latest_updates
@@ -52,27 +55,50 @@ private val titlesRes = arrayOf(
 @Composable
 internal fun HomeRoute(viewModel: HomeViewModel = koinViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val screenState = rememberMangaScreenState(targetState = uiState)
+    
+    val screenState = rememberMangaScreenState(
+        targetState = uiState,
+        refreshEnabled = uiState is HomeUiState.Success,
+        onRefresh = { viewModel.onEvent(HomeEvent.Refresh) },
+        isRefreshing = uiState.success?.refreshing == true
+    )
+
+    LaunchedEffect(viewModel) {
+        viewModel.uiEvent.onEach { uiEvent ->
+            when (uiEvent) {
+                is HomeUiEvent.ShowSnackbar -> screenState.showSnackbar(uiEvent)
+            }
+        }
+    }
 
     LifecycleEventEffect(Lifecycle.Event.ON_START) {
         viewModel.initialize()
     }
 
-    HomeScreen(screenState = screenState)
+    HomeScreen(
+        screenState = screenState,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable
-internal fun HomeScreen(screenState: MangaScreenState<HomeUiState>) = MangaScreen(
+internal fun HomeScreen(
+    screenState: MangaScreenState<HomeUiState>,
+    onEvent: (HomeEvent) -> Unit
+) = MangaScreen(
     modifier = Modifier.fillMaxSize(),
-    screenState = screenState
+    screenState = screenState,
 ) { uiState ->
     when (uiState) {
         HomeUiState.Loading -> LoadingContent()
-        is HomeUiState.Failure -> ErrorContent(uiState.message, onRetry = {})
+
+        is HomeUiState.Failure -> ErrorContent(uiState.message, onRetry = { onEvent(HomeEvent.Retry) })
+
         is HomeUiState.Success ->
             HomeScreen(
                 modifier = Modifier.fillMaxSize(),
-                uiState = uiState
+                uiState = uiState,
+                onEvent = onEvent
             )
     }
 }
@@ -80,13 +106,14 @@ internal fun HomeScreen(screenState: MangaScreenState<HomeUiState>) = MangaScree
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
-    uiState: HomeUiState.Success
+    uiState: HomeUiState.Success,
+    onEvent: (HomeEvent) -> Unit,
 ) = LazyColumn(modifier = modifier) {
     item {
         FeaturedMangaHorizontalPager(
             modifier = Modifier.fillParentMaxHeight(.4f).fillParentMaxWidth(),
             mangaList = uiState.newPopuler,
-            onMangaClick = {}
+            onMangaClick = { onEvent(HomeEvent.OpenManga(it)) }
         )
     }
 
@@ -94,15 +121,15 @@ internal fun HomeScreen(
         mangaList(
             titleRes = res,
             mangaList = when (index) {
-                0 -> uiState.latestUpdates
-                1 -> uiState.newRelease
+                0 -> uiState.latestUpdated
+                1 -> uiState.newManga
                 2 -> uiState.popularThisYear
                 else -> emptyList()
             },
             showChapter = showChapter,
-            onViewMoreClick = {},
-            onMangaClick = {},
-            onChapterClick = {}
+            onViewMoreClick = { onEvent(HomeEvent.OpenMangaList(index)) },
+            onMangaClick = { onEvent(HomeEvent.OpenManga(it)) },
+            onChapterClick = { onEvent(HomeEvent.OpenChapter(it)) }
         )
     }
 }

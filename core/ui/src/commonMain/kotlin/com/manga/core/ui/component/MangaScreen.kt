@@ -32,7 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.manga.core.ui.pulse
+import com.manga.core.ui.*
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.core_ui_action_retry
 import org.jetbrains.compose.resources.stringResource
@@ -82,6 +82,24 @@ class MangaScreenState<S : Any>(
     ) {
         if (showSnackbar(message, actionLabel)) action?.invoke()
     }
+
+    suspend fun showSnackbar(
+        message: UiText,
+        actionLabel: UiText? = null,
+        action: (() -> Unit)? = null
+    ) = showSnackbar(
+        message = message.getString(),
+        actionLabel = actionLabel?.getString(),
+        action = action
+    )
+
+    suspend fun showSnackbar(
+        showSnackbarAction: ScreenUiEvent.ShowSnackbarAction
+    ) = showSnackbar(
+        message = showSnackbarAction.message,
+        actionLabel = showSnackbarAction.actionLabel,
+        action = showSnackbarAction.action
+    )
 }
 
 @Composable
@@ -135,6 +153,18 @@ fun <S : Any> MangaScreen(
 
 @Composable
 fun AnimatedContentScope.LoadingContent(modifier: Modifier = Modifier) = Box(modifier = modifier.pulse())
+
+@Composable
+fun AnimatedContentScope.ErrorContent(
+    message: UiText,
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit
+) = ErrorContent(
+    message = message.asString(),
+    modifier = modifier,
+    onRetry = onRetry
+)
+
 
 @Composable
 fun AnimatedContentScope.ErrorContent(message: String, modifier: Modifier = Modifier, onRetry: () -> Unit) =
