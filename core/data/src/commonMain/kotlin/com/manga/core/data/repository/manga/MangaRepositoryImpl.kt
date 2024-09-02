@@ -14,7 +14,6 @@ import com.manga.core.network.response.manga.MangaChaptersResponse
 import com.manga.core.network.response.manga.asExternalModel
 import com.manga.core.network.response.manga.asMangaDexModel
 import com.manga.core.network.response.manga.asPageableManga
-import core.common.com.manga.core.common.Pageable
 import org.koin.core.annotation.Single
 
 @Single

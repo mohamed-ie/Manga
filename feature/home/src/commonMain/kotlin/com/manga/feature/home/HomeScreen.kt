@@ -53,9 +53,14 @@ private val titlesRes = arrayOf(
 )
 
 @Composable
-internal fun HomeRoute(viewModel: HomeViewModel = koinViewModel()) {
+internal fun HomeRoute(
+    navigateToChapter: (String) -> Unit,
+    navigateToManga: (MinManga) -> Unit,
+    navigateToLatestUpdated: () -> Unit,
+    viewModel: HomeViewModel = koinViewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    
+
     val screenState = rememberMangaScreenState(
         targetState = uiState,
         refreshEnabled = uiState is HomeUiState.Success,
@@ -77,7 +82,16 @@ internal fun HomeRoute(viewModel: HomeViewModel = koinViewModel()) {
 
     HomeScreen(
         screenState = screenState,
-        onEvent = viewModel::onEvent
+        onEvent = { event ->
+            when (event) {
+                is HomeEvent.OpenMangaList -> when (event.listIndex) {
+                    0 -> navigateToLatestUpdated()
+                }
+
+                else -> Unit
+            }
+            viewModel.onEvent(event)
+        }
     )
 }
 
@@ -92,7 +106,9 @@ internal fun HomeScreen(
     when (uiState) {
         HomeUiState.Loading -> LoadingContent()
 
-        is HomeUiState.Failure -> ErrorContent(uiState.message, onRetry = { onEvent(HomeEvent.Retry) })
+        is HomeUiState.Failure -> ErrorContent(
+            uiState.message,
+            onRetry = { onEvent(HomeEvent.Retry) })
 
         is HomeUiState.Success ->
             HomeScreen(

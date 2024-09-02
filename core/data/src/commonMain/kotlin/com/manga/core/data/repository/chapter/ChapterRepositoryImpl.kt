@@ -11,7 +11,7 @@ import com.manga.core.network.datasource.MangaDexChapterNetworkDataSource
 import com.manga.core.network.response.asExternalModel
 import com.manga.core.network.response.chapter.asExternalModelList
 import com.manga.core.network.response.chapter.asPageable
-import core.common.com.manga.core.common.Pageable
+import com.manga.core.common.Pageable
 import org.koin.core.annotation.Single
 
 @Single

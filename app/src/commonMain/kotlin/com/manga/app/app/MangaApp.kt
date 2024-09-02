@@ -38,15 +38,19 @@ fun MangaApp(
     appState: MangaAppState
 ) {
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
-    
-    Column(modifier = Modifier.fillMaxSize()) {
-        InternetConnectionStatus(
-            modifier = Modifier.fillMaxWidth().statusBarsPadding(),
-            isOffline = isOffline
-        )
 
-        MangaNavHost(modifier = Modifier.fillMaxWidth().weight(1f), appState = appState)
-        BottomNavigation(appState)
+    Surface(
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            InternetConnectionStatus(
+                modifier = Modifier.fillMaxWidth().statusBarsPadding(),
+                isOffline = isOffline
+            )
+
+            MangaNavHost(modifier = Modifier.fillMaxWidth().weight(1f), appState = appState)
+            BottomNavigation(appState)
+        }
     }
 }
 

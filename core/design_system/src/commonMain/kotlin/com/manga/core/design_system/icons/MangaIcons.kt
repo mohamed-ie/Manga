@@ -7,7 +7,9 @@ import androidx.compose.material.icons.automirrored.twotone.More
 import androidx.compose.material.icons.filled.CollectionsBookmark
 import androidx.compose.material.icons.filled.Cyclone
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.rounded.ArrowUpward
 import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material.icons.twotone.CollectionsBookmark
@@ -30,6 +32,6 @@ object MangaIcons {
         val viewMore = Icons.AutoMirrored.Rounded.KeyboardArrowRight
         val follow = Icons.Rounded.Favorite
         val ratingStarFill = Icons.Rounded.Star
-        val ratingStarOutline = Icons.Rounded.StarOutline
+        val scrollToTop = Icons.Rounded.KeyboardArrowUp
     }
 }

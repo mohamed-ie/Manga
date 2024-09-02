@@ -34,6 +34,8 @@ kotlin {
             implementation(projects.core.data)
 
             implementation(projects.feature.home)
+            implementation(projects.feature.manga.latestUpdated)
+
             //koin
             implementation(project.dependencies.platform(libs.koin.bom))
             implementation(libs.koin.core)

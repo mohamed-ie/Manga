@@ -1,8 +1,12 @@
 package com.manga.core.data.repository.manga_central
 
+import com.manga.core.common.IntPageable
+import com.manga.core.common.Pageable
 import com.manga.core.common.Resource
 import com.manga.core.common.getOrThrow
 import com.manga.core.common.map
+import com.manga.core.common.pageable
+import com.manga.core.common.replaceData
 import com.manga.core.data.repository.chapter.ChapterRepository
 import com.manga.core.data.repository.manga.MangaRepository
 import com.manga.core.data.repository.statistics.StatisticsRepository
@@ -28,10 +32,11 @@ internal class CompositeMangaCentralWithChapter(
 
     override suspend fun minMangaList(request: MangaListRequest, withStatistics: Boolean) =
         if (withStatistics.not())
-            mangaRepository.mangaList(request).map { it.data.map(MangaDexManga::asMinManga) }
+            mangaRepository.mangaList(request).map { it.map(MangaDexManga::asMinManga) }
         else coroutineScope {
             try {
-                val mangaList = mangaRepository.mangaList(request).getOrThrow().data
+                val mangaPageable = mangaRepository.mangaList(request).getOrThrow()
+                val mangaList = mangaPageable.data
                 val mangaIds = mangaList.map { it.id }
                 val mangaListStatisticsRequest = MangaListStatisticsRequest(ids = mangaIds)
 
@@ -44,7 +49,7 @@ internal class CompositeMangaCentralWithChapter(
                     manga.asMinManga(statistics = statistics.asMinStatistics)
                 }
 
-                Resource.success(minMangaList)
+                Resource.pageable(mangaPageable.replaceData(minMangaList))
             } catch (e: MangaException) {
                 Resource.expectedFailure(e)
             } catch (t: Throwable) {
@@ -55,11 +60,12 @@ internal class CompositeMangaCentralWithChapter(
     override suspend fun minMangaList(
         request: ChapterListRequest,
         withStatistics: Boolean
-    ): Resource<List<MinManga>, MangaException> = coroutineScope {
+    ): Resource<IntPageable<MinManga>, MangaException> = coroutineScope {
         try {
-            val chapterList = chapterRepository.chapterList(request)
+            val chapterPageable = chapterRepository.chapterList(request)
                 .getOrThrow()
-                .data
+
+            val chapterList = chapterPageable.data
 
             val mangaIds = chapterList.map { it.mangaId }
             val mangaRequest = MangaListRequest(ids = mangaIds)
@@ -69,7 +75,7 @@ internal class CompositeMangaCentralWithChapter(
             }
 
             if (withStatistics.not())
-                return@coroutineScope Resource.success(minMangaList)
+                return@coroutineScope Resource.pageable(chapterPageable.replaceData(minMangaList))
 
             val mangaListStatisticsRequest = MangaListStatisticsRequest(ids = mangaIds)
 
@@ -82,7 +88,7 @@ internal class CompositeMangaCentralWithChapter(
                 manga.copy(statistics = statistics.asMinStatistics)
             }
 
-            Resource.success(minMangaList)
+            Resource.pageable(chapterPageable.replaceData(minMangaList))
         } catch (e: MangaException) {
             Resource.expectedFailure(e)
         } catch (t: Throwable) {

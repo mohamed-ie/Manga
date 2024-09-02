@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -28,29 +30,40 @@ import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.manga.core.ui.*
+import com.manga.core.design_system.icons.MangaIcons
+import com.manga.core.ui.ScreenUiEvent
+import com.manga.core.ui.UiText
+import com.manga.core.ui.asString
+import com.manga.core.ui.getString
+import com.manga.core.ui.pulse
+import kotlinx.coroutines.launch
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.core_ui_action_retry
+import manga.core.ui.generated.resources.core_ui_content_description_scroll_to_top
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun <S : Any> rememberMangaScreenState(
     targetState: S,
     refreshEnabled: Boolean = false,
+    showFloatingIconButton: Boolean = false,
     isRefreshing: Boolean = false,
     onRefresh: (() -> Unit)? = null,
-    showFloatingIconButton: Boolean = false,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) = remember(
+    showFloatingIconButton,
     targetState,
     refreshEnabled,
     isRefreshing,
     onRefresh,
-    showFloatingIconButton,
     snackbarHostState
 ) {
     MangaScreenState(
@@ -58,9 +71,10 @@ fun <S : Any> rememberMangaScreenState(
         refreshEnabled = refreshEnabled,
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
-        showFloatingIconButton = showFloatingIconButton,
         snackbarHostState = snackbarHostState
-    )
+    ).apply {
+        this.showFloatingActionButton = showFloatingIconButton
+    }
 }
 
 @Stable
@@ -69,9 +83,16 @@ class MangaScreenState<S : Any>(
     val refreshEnabled: Boolean = false,
     val isRefreshing: Boolean = false,
     val onRefresh: (() -> Unit)? = null,
-    val showFloatingIconButton: Boolean,
     val snackbarHostState: SnackbarHostState
 ) {
+    private val showFloatingButtonState = mutableStateOf(false)
+
+    var showFloatingActionButton
+        get() = showFloatingButtonState.value
+        set(value) {
+            showFloatingButtonState.value = value
+        }
+
     suspend fun showSnackbar(message: String, actionLabel: String? = null) =
         snackbarHostState.showSnackbar(message, actionLabel) == SnackbarResult.ActionPerformed
 
@@ -106,6 +127,7 @@ class MangaScreenState<S : Any>(
 fun <S : Any> MangaScreen(
     modifier: Modifier = Modifier,
     screenState: MangaScreenState<S>,
+    contentKey: (targetState: S) -> Any? = { it },
     floatingActionButton: @Composable AnimatedVisibilityScope.() -> Unit = {},
     topBar: @Composable () -> Unit = {},
     content: @Composable AnimatedContentScope.(S) -> Unit
@@ -115,8 +137,10 @@ fun <S : Any> MangaScreen(
     snackbarHost = { SnackbarHost(hostState = screenState.snackbarHostState) },
     topBar = topBar,
     floatingActionButton = {
+        val visible by remember { derivedStateOf(screenState::showFloatingActionButton) }
+
         AnimatedVisibility(
-            visible = screenState.showFloatingIconButton,
+            visible = visible,
             enter = scaleIn(),
             exit = scaleOut(),
             content = floatingActionButton
@@ -140,6 +164,7 @@ fun <S : Any> MangaScreen(
             modifier = Modifier.fillMaxSize(),
             targetState = screenState.targetState,
             transitionSpec = { fadeIn() togetherWith fadeOut() },
+            contentKey = contentKey,
             content = content
         )
 
@@ -151,8 +176,25 @@ fun <S : Any> MangaScreen(
     }
 }
 
+object MangaScreenDefaults {
+    @Composable
+    fun ScrollToTopFAB(onClick: suspend () -> Unit) {
+        val scope = rememberCoroutineScope()
+
+        FloatingActionButton(
+            onClick = { scope.launch { onClick() } }
+        ) {
+            Icon(
+                MangaIcons.Common.scrollToTop,
+                contentDescription = stringResource(Res.string.core_ui_content_description_scroll_to_top)
+            )
+        }
+    }
+}
+
 @Composable
-fun AnimatedContentScope.LoadingContent(modifier: Modifier = Modifier) = Box(modifier = modifier.pulse())
+fun AnimatedContentScope.LoadingContent(modifier: Modifier = Modifier) =
+    Box(modifier = modifier.pulse())
 
 @Composable
 fun AnimatedContentScope.ErrorContent(
@@ -167,7 +209,11 @@ fun AnimatedContentScope.ErrorContent(
 
 
 @Composable
-fun AnimatedContentScope.ErrorContent(message: String, modifier: Modifier = Modifier, onRetry: () -> Unit) =
+fun AnimatedContentScope.ErrorContent(
+    message: String,
+    modifier: Modifier = Modifier,
+    onRetry: () -> Unit
+) =
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

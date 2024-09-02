@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.manage.feature.manga.recent_updated"
+    namespace = "com.manga.feature.latest_updated"
 }
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.domain)
+            api(projects.core.data)
         }
     }
 }

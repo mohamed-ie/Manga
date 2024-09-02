@@ -82,10 +82,10 @@ internal class HomeViewModel(
             ).getOrThrow()
 
             _uiState.value = HomeUiState.Success(
-                newManga = newManga,
-                newPopuler = newPopular,
-                popularThisYear = popularThisYear,
-                latestUpdated = latestUpdates
+                newManga = newManga.data,
+                newPopuler = newPopular.data,
+                popularThisYear = popularThisYear.data,
+                latestUpdated = latestUpdates.data
             )
         }
 

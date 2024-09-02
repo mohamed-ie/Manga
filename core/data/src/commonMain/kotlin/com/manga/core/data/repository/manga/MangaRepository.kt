@@ -7,7 +7,7 @@ import com.manga.core.model.manga.MangaVolume
 import com.manga.core.model.manga.request.MangaChaptersRequest
 import com.manga.core.model.manga.request.MangaListRequest
 import com.manga.core.model.manga.request.MangaRequest
-import core.common.com.manga.core.common.Pageable
+import com.manga.core.common.Pageable
 
 interface MangaRepository {
     suspend fun mangaList(request: MangaListRequest = MangaListRequest()): Resource<Pageable<MangaDexManga, Int>, MangaException>

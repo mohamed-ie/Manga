@@ -3,7 +3,7 @@ package com.manga.core.network.response.chapter
 import com.manga.core.network.response.common.PageableResponse
 import com.manga.core.network.response.common.nextKey
 import com.manga.core.network.response.common.previousKey
-import core.common.com.manga.core.common.Pageable
+import com.manga.core.common.Pageable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,8 +14,7 @@ data class ChapterListResponse(
 ):PageableResponse()
 
 fun ChapterListResponse.asPageable() = Pageable(
+    data = data.mapNotNull(ChapterDto::asExternalModel),
     nextKey = nextKey,
-    previousKey = previousKey,
-    totalCount = total,
-    data = data.mapNotNull(ChapterDto::asExternalModel)
+    previousKey = previousKey
 )

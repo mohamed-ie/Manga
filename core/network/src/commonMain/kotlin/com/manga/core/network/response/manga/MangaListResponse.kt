@@ -3,7 +3,7 @@ package com.manga.core.network.response.manga
 import com.manga.core.network.response.common.PageableResponse
 import com.manga.core.network.response.common.nextKey
 import com.manga.core.network.response.common.previousKey
-import core.common.com.manga.core.common.Pageable
+import com.manga.core.common.Pageable
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -19,6 +19,5 @@ fun MangaListResponse.asPageableManga() = Pageable(
         ?.mapNotNull(MangaDto::asMangaDexModel)
         ?: emptyList(),
     nextKey = nextKey,
-    previousKey = previousKey,
-    totalCount = total ?: 0
+    previousKey = previousKey
 )

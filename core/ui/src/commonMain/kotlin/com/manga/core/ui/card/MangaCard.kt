@@ -48,8 +48,10 @@ fun MangaCard(
     modifier: Modifier = Modifier,
     manga: MinManga?,
     showChapter: Boolean,
+    showStatus: Boolean = true,
+    showPublicationDemographic: Boolean = true,
     onClick: () -> Unit,
-    onChapterClick: (MinChapter) -> Unit
+    onChapterClick: () -> Unit
 ) {
     val publicationDemographicColors = LocalPublicationDemographicColor.current
     val statusColors = LocalStatusColors.current
@@ -84,15 +86,41 @@ fun MangaCard(
                 ).fillMaxSize()
             )
 
-            manga?.publicationDemographic?.let {
-                Row(
-                    modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Row(
+                modifier = Modifier.align(Alignment.BottomStart).padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (showPublicationDemographic)
+                    manga?.publicationDemographic?.let {
+                        Surface(
+                            color = publicationDemographicColors.containerColor(it),
+                            contentColor = publicationDemographicColors.color(it),
+                            shape = MaterialTheme.shapes.small
+                        ) {
+                            Text(
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                text = it.name.lowercase().replaceFirstChar(Char::uppercase)
+                            )
+                        }
+                    }
 
+                Spacer(Modifier.weight(1f))
+
+                manga?.statistics?.let { statistics ->
+                    RatingStarIcon(
+                        rating = statistics.rating
+                    )
+                }
+            }
+
+
+            if (showStatus)
+                manga?.status?.let {
                     Surface(
-                        color = publicationDemographicColors.containerColor(it),
-                        contentColor = publicationDemographicColors.color(it),
+                        modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
+                        color = statusColors.containerColor(it),
+                        contentColor = statusColors.color(it),
                         shape = MaterialTheme.shapes.small
                     ) {
                         Text(
@@ -101,30 +129,7 @@ fun MangaCard(
                             text = it.name.lowercase().replaceFirstChar(Char::uppercase)
                         )
                     }
-
-                    Spacer(Modifier.weight(1f))
-                    manga.statistics?.let { statistics ->
-                        RatingStarIcon(
-                            rating = statistics.rating
-                        )
-                    }
                 }
-            }
-
-            manga?.status?.let {
-                Surface(
-                    modifier = Modifier.align(Alignment.TopEnd).padding(8.dp),
-                    color = statusColors.containerColor(it),
-                    contentColor = statusColors.color(it),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    Text(
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        style = MaterialTheme.typography.labelSmall,
-                        text = it.name.lowercase().replaceFirstChar(Char::uppercase)
-                    )
-                }
-            }
         }
 
         Text(
@@ -154,7 +159,7 @@ fun MangaCard(
                         .clickable(
                             enabled = manga != null,
                             role = Role.Button,
-                            onClick = { manga?.lastChapter?.let { onChapterClick(it) } }
+                            onClick = onChapterClick
                         )
                         .padding(vertical = 4.dp, horizontal = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
