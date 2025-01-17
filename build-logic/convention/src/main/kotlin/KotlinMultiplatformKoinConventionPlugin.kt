@@ -21,7 +21,7 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
         extensions.getByType<KotlinMultiplatformExtension>().apply {
             sourceSets {
                 commonMain {
-                    kotlin.srcDirs("build/generated/ksp/main/kotlin")
+                    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 
                     dependencies {
                         implementation(project.dependencies.platform(library("koin.bom")))
@@ -42,6 +42,8 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
                 add("kspCommonMainMetadata", library("koin.ksp.compiler"))
                 add("kspAndroid", platform(library("koin.annotations.bom")))
                 add("kspAndroid", library("koin.ksp.compiler"))
+                add("kspDesktop", platform(library("koin.annotations.bom")))
+                add("kspDesktop", library("koin.ksp.compiler"))
             }
         }
 

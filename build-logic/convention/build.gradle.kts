@@ -9,8 +9,6 @@ dependencies {
     compileOnly(libs.ksp.gradle)
 }
 
-
-
 gradlePlugin {
     plugins {
 
@@ -33,5 +31,6 @@ gradlePlugin {
             id = "manga.kotlin.multiplatform.feature"
             implementationClass = "KotlinMultiplatformFeatureConventionPlugin"
         }
+
     }
 }

@@ -15,12 +15,11 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
             apply("manga.kotlin.multiplatform.koin")
             apply("org.jetbrains.compose")
             apply("org.jetbrains.kotlin.plugin.compose")
+            apply("org.jetbrains.kotlin.plugin.serialization")
         }
 
         extensions.getByType<KspExtension>().apply {
             arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
-            arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
-            arg("USE_COMPOSE_VIEWMODEL","true")
         }
 
         val kotlinMultiplatformExtension = extensions.getByType<KotlinMultiplatformExtension>()
@@ -32,11 +31,13 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                     implementation(project(":core:model"))
                     implementation(project(":core:common"))
 
+                    implementation(library("androidx.navigation.compose"))
+
                     implementation(project.dependencies.platform(library("koin-bom")))
                     implementation(library("koin.compose.viewmodel"))
 
                     implementation(compose("org.jetbrains.compose.components:components-resources"))
-                    implementation(library("lifecycle.viewmodel.compose"))
+                    implementation(library("androidx.lifecycle.viewmodel"))
                 }
             }
         }

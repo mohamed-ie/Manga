@@ -46,6 +46,5 @@ internal fun DependencyHandlerDelegate.debugImplementation(dependency: Any) {
     add("debugImplementation", dependency)
 }
 
-
 fun KotlinMultiplatformExtension.sourceSets(configure: Action<org.gradle.api.NamedDomainObjectContainer<org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet>>): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("sourceSets", configure)
