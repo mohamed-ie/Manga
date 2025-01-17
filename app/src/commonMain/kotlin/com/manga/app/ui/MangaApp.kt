@@ -1,4 +1,4 @@
-package com.manga.app.app
+package com.manga.app.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -7,27 +7,34 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import com.manga.app.app.navigation.MangaNavHost
-import com.manga.app.app.navigation.TopLevelDestination
+import com.manga.app.navigation.MangaNavHost
+import com.manga.app.navigation.TopLevelDestination
+import com.manga.core.ui.messaging.ProvideMessaging
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.core_ui_text_back_online
 import manga.core.ui.generated.resources.core_ui_text_no_internet_connection
@@ -38,18 +45,23 @@ fun MangaApp(
     appState: MangaAppState
 ) {
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    Surface(
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            InternetConnectionStatus(
-                modifier = Modifier.fillMaxWidth().statusBarsPadding(),
-                isOffline = isOffline
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            Column(Modifier.consumeWindowInsets(NavigationBarDefaults.windowInsets)) {
+                BottomNavigation(appState)
+                InternetConnectionStatus(isOffline = isOffline)
+                Spacer(modifier = Modifier.padding(NavigationBarDefaults.windowInsets.asPaddingValues()))
+            }
+        }
+    ) { innerPadding ->
+        ProvideMessaging(snackbarHostState = snackbarHostState) {
+            MangaNavHost(
+                modifier = Modifier.consumeWindowInsets(innerPadding).padding(innerPadding),
+                appState = appState
             )
-
-            MangaNavHost(modifier = Modifier.fillMaxWidth().weight(1f), appState = appState)
-            BottomNavigation(appState)
         }
     }
 }
@@ -92,14 +104,16 @@ private fun InternetConnectionStatus(modifier: Modifier = Modifier, isOffline: B
 
 @Composable
 private fun BottomNavigation(appState: MangaAppState) {
+    val shouldShowBottomBar by appState.shouldShowBottomBar
     AnimatedVisibility(
-        visible = appState.isInTopLevelStartDestination,
+        visible = shouldShowBottomBar,
         enter = expandVertically(expandFrom = Alignment.Bottom),
         exit = shrinkVertically(shrinkTowards = Alignment.Bottom)
     ) {
         NavigationBar {
             TopLevelDestination.entries.forEach { destination ->
-                val selected = appState.currentDestination?.isTopLevelDestinationInHierarchy(destination) == true
+                val selected =
+                    appState.currentDestination?.isTopLevelDestinationInHierarchy(destination) == true
                 NavigationBarItem(
                     selected = selected,
                     label = { Text(stringResource(destination.labelResource)) },
@@ -116,12 +130,12 @@ private fun BottomNavigation(appState: MangaAppState) {
                             )
                         }
                     },
-                    onClick = {appState.navigateToTopLevelDestination(destination)}
+                    onClick = { appState.navigateToTopLevelDestination(destination) }
                 )
             }
         }
     }
 }
 
-private fun NavDestination.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
-    hierarchy.any { it.route?.contains(destination.route, true) ?: false }
+private fun NavDestination?.isTopLevelDestinationInHierarchy(destination: TopLevelDestination) =
+    this?.hierarchy?.any { it.hasRoute(destination.route::class) } ?: false
