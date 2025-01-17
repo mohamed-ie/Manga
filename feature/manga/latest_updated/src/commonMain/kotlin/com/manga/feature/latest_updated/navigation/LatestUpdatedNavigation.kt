@@ -4,8 +4,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.manga.MinManga
 import com.manga.feature.latest_updated.LatestUpdatedRoute
 
 private const val LATEST_UPDATED_ROUTE = "latest_updated_route"

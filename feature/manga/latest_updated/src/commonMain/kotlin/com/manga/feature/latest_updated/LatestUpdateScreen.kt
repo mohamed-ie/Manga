@@ -14,8 +14,8 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.manga.MinManga
+import com.manga.core.model.manga_dex.chapter.MinChapter
+import com.manga.core.model.manga_dex.manga.MinManga
 import com.manga.core.ui.LazyPagingItems
 import com.manga.core.ui.card.MangaCard
 import com.manga.core.ui.collectAsLazyPagingItems

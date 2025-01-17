@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.manga.core.common.getOrThrow
 import com.manga.core.data.repository.manga_central.MangaCentralRepository
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.chapter.request.ChapterListRequest
-import com.manga.core.model.common.MangaDexSortedOrder
-import com.manga.core.model.common.descOrder
-import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.request.MangaListRequest
+import com.manga.core.model.manga_dex.chapter.MinChapter
+import com.manga.core.model.manga_dex.chapter.request.ChapterListRequest
+import com.manga.core.model.manga_dex.common.MangaDexSortedOrder
+import com.manga.core.model.manga_dex.common.descOrder
+import com.manga.core.model.manga_dex.manga.MinManga
+import com.manga.core.model.manga_dex.manga.request.MangaListRequest
 import com.manga.core.ui.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +45,8 @@ internal class HomeViewModel(
         )
     }
 
-    private fun loadData(onFailure: (UiText) -> Unit, onSuccess: (HomeUiState.Success) -> Unit) =
-        viewModelScope.launch(onFailure) {
+    private fun loadData(onFailure:(UiText) -> Unit, onSuccess:suspend (HomeUiState.Success) -> Unit) =
+        viewModelScope.launch({onFailure(it)}) {
             val newPopular = mangaCentralRepository.minMangaList(
                 request = MangaListRequest(
                     order = listOf(MangaDexSortedOrder(MangaListRequest.Order.FollowedCount)),

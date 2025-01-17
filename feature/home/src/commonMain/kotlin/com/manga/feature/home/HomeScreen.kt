@@ -26,8 +26,8 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.manga.core.design_system.icons.MangaIcons
 import com.manga.core.design_system.theme.spacing
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.manga.MinManga
+import com.manga.core.model.manga_dex.chapter.MinChapter
+import com.manga.core.model.manga_dex.manga.MinManga
 import com.manga.core.ui.FeaturedMangaHorizontalPager
 import com.manga.core.ui.card.MangaCard
 import com.manga.core.ui.component.ErrorContent
@@ -87,6 +87,7 @@ internal fun HomeRoute(
                 is HomeEvent.OpenMangaList -> when (event.listIndex) {
                     0 -> navigateToLatestUpdated()
                 }
+                is HomeEvent.OpenChapter -> navigateToChapter(event.chapter.id)
 
                 else -> Unit
             }

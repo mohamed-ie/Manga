@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.manga.core.data.repository.manga_central.MangaCentralRepository
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.chapter.request.ChapterListRequest
-import com.manga.core.model.common.descOrder
-import com.manga.core.model.manga.MinManga
+import com.manga.core.model.manga_dex.chapter.MinChapter
+import com.manga.core.model.manga_dex.chapter.request.ChapterListRequest
+import com.manga.core.model.manga_dex.common.descOrder
+import com.manga.core.model.manga_dex.manga.MinManga
 import com.manga.core.ui.distinctBy
 import com.manga.core.ui.offsetPagerOf
 import kotlinx.coroutines.flow.map
