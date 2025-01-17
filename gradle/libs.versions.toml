@@ -1,32 +1,47 @@
 [versions]
-agp = "8.6.0"
-android-compileSdk = "34"
+agp = "8.8.0-alpha05"
+
+composeUtilsAppEvent = "0.0.2"
+inspektify-ktor = "1.0.0-beta08"
+jdk="21"
+versionCode = "1"
+versionName = "1.0.0"
+android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.1"
+
+androidx-activityCompose = "1.10.0"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.13.1"
+androidx-constraintlayout = "2.2.0"
+androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-plugin = "1.7.0-alpha03"
+
+compose-plugin = "1.7.0"
 junit = "4.13.2"
-kotlin = "2.0.20"
-koin-annotations-bom = "1.4.0-RC3"
-koin = "4.0.0-RC1"
-koin-mulitplatform = "1.2.0-Beta4"
-ksp = "2.0.20-1.0.24"
-kotlinx-datetime = "0.6.0"
-ktor = "2.3.12"
+kotlin = "2.1.0"
+koin-annotations-bom = "2.0.0-Beta3"
+koin = "4.0.0"
+ksp = "2.1.0-1.0.29"
+kotlinx-datetime = "0.6.1"
+collections-immutable = "0.3.8"
+ktor = "3.0.0"
 napier = "2.7.1"
-serialization-json = "1.6.3"
-coroutines = "1.9.0-RC"
-lifecycle-viewmodel-compose = "2.8.0"
-paging = "3.3.2"
+serialization-json = "1.7.3"
+kotlinx-coroutines = "1.10.1"
+androidx-lifecycle = "2.8.3"
+paging = "3.3.5"
 coil = "3.0.0-alpha10"
+compose-navigation = "2.8.0-alpha10"
+datastore = "1.1.2"
+okio = "3.9.0"
+
 
 [libraries]
+compose-utils-app-event = { module = "io.github.mohamed-ie:compose-utils-app-event", version.ref = "composeUtilsAppEvent" }
+inspektify-ktor3 = { module = "io.github.bvantur:inspektify-ktor3", version.ref = "inspektify-ktor" }
+inspektify-ktor2 = { module = "io.github.bvantur:inspektify-ktor2", version.ref = "inspektify-ktor" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -37,9 +52,13 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "compose-navigation" }
+androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
-#viewmodel
-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-viewmodel-compose" }
+#datastore
+datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 
 #ktor
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
@@ -57,11 +76,14 @@ napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
 
-#kotlin
+#kotlinX
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json" }
+kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "serialization-json" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
-kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
-kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collections-immutable" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 #koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
@@ -71,8 +93,8 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-mulitplatform" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-mulitplatform" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 
 #koin-annotations
 koin-annotations-bom = { module = "io.insert-koin:koin-annotations-bom", version.ref = "koin-annotations-bom" }
