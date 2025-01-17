@@ -1,24 +1,18 @@
 package com.manga.core.data.repository.manga_central
 
-import com.manga.core.common.IntPageable
-import com.manga.core.common.Pageable
-import com.manga.core.common.Resource
-import com.manga.core.common.getOrThrow
-import com.manga.core.common.map
-import com.manga.core.common.pageable
-import com.manga.core.common.replaceData
+import com.manga.core.common.*
 import com.manga.core.data.repository.chapter.ChapterRepository
 import com.manga.core.data.repository.manga.MangaRepository
 import com.manga.core.data.repository.statistics.StatisticsRepository
-import com.manga.core.model.MangaException
-import com.manga.core.model.chapter.asMinChapter
-import com.manga.core.model.chapter.request.ChapterListRequest
-import com.manga.core.model.common.MangaDexManga
-import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.asMinManga
-import com.manga.core.model.manga.request.MangaListRequest
-import com.manga.core.model.statistics.asMinStatistics
-import com.manga.core.model.statistics.request.MangaListStatisticsRequest
+import com.manga.core.model.manga_dex.common.MangaException
+import com.manga.core.model.manga_dex.chapter.asMinChapter
+import com.manga.core.model.manga_dex.chapter.request.ChapterListRequest
+import com.manga.core.model.manga_dex.common.MangaDexManga
+import com.manga.core.model.manga_dex.manga.MinManga
+import com.manga.core.model.manga_dex.manga.asMinManga
+import com.manga.core.model.manga_dex.manga.request.MangaListRequest
+import com.manga.core.model.manga_dex.statistics.asMinStatistics
+import com.manga.core.model.manga_dex.statistics.request.MangaListStatisticsRequest
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import org.koin.core.annotation.Single
@@ -31,8 +25,8 @@ internal class CompositeMangaCentralWithChapter(
 ) : MangaCentralRepository {
 
     override suspend fun minMangaList(request: MangaListRequest, withStatistics: Boolean) =
-        if (withStatistics.not())
-            mangaRepository.mangaList(request).map { it.map(MangaDexManga::asMinManga) }
+        if (withStatistics.not()) mangaRepository.mangaList(request).map { it.map(MangaDexManga::asMinManga) }
+
         else coroutineScope {
             try {
                 val mangaPageable = mangaRepository.mangaList(request).getOrThrow()
@@ -65,7 +59,7 @@ internal class CompositeMangaCentralWithChapter(
             val chapterPageable = chapterRepository.chapterList(request)
                 .getOrThrow()
 
-            val chapterList = chapterPageable.data
+            val chapterList = chapterPageable.data.ifEmpty { return@coroutineScope Resource.success(emptyPageable()) }
 
             val mangaIds = chapterList.map { it.mangaId }
             val mangaRequest = MangaListRequest(ids = mangaIds)

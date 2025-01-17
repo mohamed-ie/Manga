@@ -3,13 +3,13 @@ package com.manga.core.data.repository.statistics
 import com.manga.core.common.Resource
 import com.manga.core.common.map
 import com.manga.core.common.mapExpected
-import com.manga.core.model.MangaException
-import com.manga.core.model.statistics.MangaDexMangaStatistics
-import com.manga.core.model.statistics.request.MangaListStatisticsRequest
-import com.manga.core.model.statistics.request.MangaStatisticsRequest
+import com.manga.core.model.manga_dex.common.MangaException
+import com.manga.core.model.manga_dex.statistics.MangaDexMangaStatistics
+import com.manga.core.model.manga_dex.statistics.request.MangaListStatisticsRequest
+import com.manga.core.model.manga_dex.statistics.request.MangaStatisticsRequest
 import com.manga.core.network.datasource.MangaDexStatisticsNetworkDataSource
-import com.manga.core.network.response.asExternalModel
-import com.manga.core.network.response.statistics.asMangaDexModelList
+import com.manga.core.network.manga_dex.model.asExternalModel
+import com.manga.core.network.manga_dex.model.statistics.asMangaDexModelList
 import org.koin.core.annotation.Single
 
 @Single

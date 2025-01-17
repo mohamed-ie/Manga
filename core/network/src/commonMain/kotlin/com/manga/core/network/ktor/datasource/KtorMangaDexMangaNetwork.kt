@@ -1,16 +1,18 @@
 package com.manga.core.network.ktor.datasource
 
 import com.manga.core.common.Resource
-import com.manga.core.model.manga.request.MangaChaptersRequest
-import com.manga.core.model.manga.request.MangaListRequest
-import com.manga.core.model.manga.request.MangaRequest
+import com.manga.core.model.manga_dex.manga.request.MangaChaptersRequest
+import com.manga.core.model.manga_dex.manga.request.MangaListRequest
+import com.manga.core.model.manga_dex.manga.request.MangaRequest
 import com.manga.core.network.datasource.MangaDexMangaNetworkDataSource
 import com.manga.core.network.ktor.apiCall
-import com.manga.core.network.response.MangaDexErrorResponse
-import com.manga.core.network.response.manga.MangaChaptersResponse
-import com.manga.core.network.response.manga.MangaListResponse
-import com.manga.core.network.response.manga.MangaResponse
-import com.manga.core.network.serverDateTimeFormat
+import com.manga.core.network.manga_dex.model.MangaDexErrorNetworkModel
+import com.manga.core.network.manga_dex.model.common.MangaDexPageable
+import com.manga.core.network.manga_dex.model.common.relationships.MangaRelationship
+import com.manga.core.network.manga_dex.model.manga.MangaChaptersNetworkModel
+import com.manga.core.network.manga_dex.model.manga.MangaListNetworkModel
+import com.manga.core.network.manga_dex.model.manga.MangaNetworkModel
+import com.manga.core.network.manga_dex.serverDateTimeFormat
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -23,7 +25,7 @@ internal class KtorMangaDexMangaNetwork(
 ) : MangaDexMangaNetworkDataSource {
     override suspend fun mangaList(
         request: MangaListRequest
-    ): Resource<MangaListResponse, MangaDexErrorResponse> =
+    ): Resource<MangaDexPageable<MangaRelationship>, MangaDexErrorNetworkModel> =
         client.apiCall {
             get("manga") {
                 request.order?.forEach {
@@ -57,14 +59,14 @@ internal class KtorMangaDexMangaNetwork(
             }
         }
 
-    override suspend fun manga(request: MangaRequest): Resource<MangaResponse, MangaDexErrorResponse> =
+    override suspend fun manga(request: MangaRequest): Resource<MangaNetworkModel, MangaDexErrorNetworkModel> =
         client.apiCall {
             get("manga/${request.id}") {
                 request.includes?.forEach { parameter("includes[]", it) }
             }
         }
 
-    override suspend fun chapters(request: MangaChaptersRequest): Resource<MangaChaptersResponse, MangaDexErrorResponse> =
+    override suspend fun chapters(request: MangaChaptersRequest): Resource<MangaChaptersNetworkModel, MangaDexErrorNetworkModel> =
         client.apiCall {
             get("manga/${request.id}/aggregate") {
                 request.groups?.forEach { parameter("groups[]", it) }

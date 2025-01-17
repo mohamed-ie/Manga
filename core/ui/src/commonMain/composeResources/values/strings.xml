@@ -33,6 +33,17 @@
     <string name="core_ui_content_description_rating">Rating</string>
     <string name="core_ui_message_unexpected_exception">Unexpected exception occurred please try again later</string>
     <string name="core_ui_content_description_scroll_to_top">Scroll to top</string>
+    <string name="core_ui_content_description_personal_picture">Personal picture</string>
+    <string name="core_ui_action_logout">Logout</string>
+    <string name="core_ui_text_logout">Logout</string>
+    <string name="core_ui_text_language">Language</string>
+    <string name="core_ui_text_manga_settings">Manga settings</string>
+    <string name="core_ui_text_theme">Theme</string>
+    <string name="core_ui_text_light">Light</string>
+    <string name="core_ui_text_dark">Dark</string>
+    <string name="core_ui_text_auto">Auto</string>
+    <string name="core_ui_action_dismiss">Dismiss</string>
+    <string name="core_ui_text_guest">Guest</string>
 
 
 </resources>

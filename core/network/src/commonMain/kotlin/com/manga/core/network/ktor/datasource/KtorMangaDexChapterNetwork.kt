@@ -1,14 +1,18 @@
 package com.manga.core.network.ktor.datasource
 
 import com.manga.core.common.Resource
-import com.manga.core.model.chapter.request.ChapterListRequest
-import com.manga.core.model.chapter.request.ChapterRequest
+import com.manga.core.model.manga_dex.chapter.request.ChapterListRequest
+import com.manga.core.model.manga_dex.chapter.request.ChapterRequest
 import com.manga.core.network.datasource.MangaDexChapterNetworkDataSource
 import com.manga.core.network.ktor.apiCall
-import com.manga.core.network.response.MangaDexErrorResponse
-import com.manga.core.network.response.chapter.ChapterListResponse
-import com.manga.core.network.response.chapter.ChapterResponse
-import com.manga.core.network.serverDateTimeFormat
+import com.manga.core.network.manga_dex.model.MangaDexErrorNetworkModel
+import com.manga.core.network.manga_dex.model.chapter.ChapterListNetworkModel
+import com.manga.core.network.manga_dex.model.chapter.ChapterNetworkModel
+import com.manga.core.network.manga_dex.model.common.MangaDexNetworkModel
+import com.manga.core.network.manga_dex.model.common.MangaDexPageable
+import com.manga.core.network.manga_dex.model.common.relationships.ChapterRelationship
+import com.manga.core.network.manga_dex.model.manga.MangaNetworkModel
+import com.manga.core.network.manga_dex.serverDateTimeFormat
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
@@ -18,14 +22,14 @@ import org.koin.core.annotation.Single
 internal class KtorMangaDexChapterNetwork(
     private val client: HttpClient
 ) : MangaDexChapterNetworkDataSource {
-    override suspend fun chapter(request: ChapterRequest): Resource<ChapterResponse, MangaDexErrorResponse> =
+    override suspend fun chapter(request: ChapterRequest): Resource<MangaDexNetworkModel<ChapterRelationship>, MangaDexErrorNetworkModel> =
         client.apiCall {
             get("chapter/${request.id}") {
                 request.includes?.forEach { parameter("includes[]", it) }
             }
         }
 
-    override suspend fun chapterList(request: ChapterListRequest): Resource<ChapterListResponse, MangaDexErrorResponse> =
+    override suspend fun chapterList(request: ChapterListRequest): Resource<MangaDexPageable<ChapterRelationship>, MangaDexErrorNetworkModel> =
         client.apiCall {
             get("chapter") {
                 request.ids?.forEach { parameter("ids[]", it)}

@@ -3,12 +3,15 @@ package com.manga.core.common.di
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
-@Qualifier
-annotation class MangaScope
+@Named
+annotation class ApplicationScope
 
 @Single
-internal fun mangaScope(@Dispatcher(MangaDispatchers.Default) dispatcher: CoroutineDispatcher) =
-    CoroutineScope(SupervisorJob() + dispatcher)
+@ApplicationScope
+internal fun applicationScope(
+    @Qualifier(Dispatcher.Default::class) dispatcher: CoroutineDispatcher
+) = CoroutineScope(SupervisorJob() + dispatcher)

@@ -1,12 +1,14 @@
 package com.manga.core.common
 
+typealias IntPageable<T> = Pageable<T, Int>
+
 data class Pageable<T, K>(
     val data: List<T>,
     val nextKey: K? = null,
     val previousKey: K? = null
 )
 
-typealias IntPageable<T> = Pageable<T, Int>
+fun <T, K> emptyPageable() = Pageable<T, K>(emptyList())
 
 inline fun <I, O, K> Pageable<I, K>.map(transformer: (I) -> O) =
     Pageable(data = data.map(transformer), nextKey = nextKey, previousKey = previousKey)

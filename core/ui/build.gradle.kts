@@ -11,21 +11,21 @@ android {
 
 kotlin{
     sourceSets{
-        val commonMain by getting
         commonMain.dependencies {
             api(projects.core.designSystem)
             api(projects.core.model)
             api(projects.core.common)
-            api(compose.components.resources)
-            api(libs.lifecycle.viewmodel.compose)
+            implementation(compose.components.resources)
             implementation(libs.kotlinx.coroutines.core)
 
             implementation(libs.paging.common)
             api(libs.kotlinx.datetime)
+            api(libs.kotlinx.collections.immutable)
+            api(libs.compose.utils.app.event)
 
             //coil
             api(libs.coil)
-            api(libs.coil.compose)
+            implementation(libs.coil.compose)
             api(libs.coil.compose.core)
             api(libs.coil.network.ktor2)
         }

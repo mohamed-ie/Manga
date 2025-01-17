@@ -1,19 +1,23 @@
 package com.manga.core.common.di
 
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
-@Qualifier
-annotation class Dispatcher(val dispatcher: MangaDispatchers)
+annotation class Dispatcher {
+    @Qualifier
+    annotation class IO
 
-enum class MangaDispatchers { IO, Default }
+    @Qualifier
+    annotation class Default
+}
+
 
 @Single
-@Dispatcher(MangaDispatchers.Default)
-internal fun mangaDefaultDispatcher() = Dispatchers.Default
+@Qualifier(Dispatcher.Default::class)
+internal fun defaultDispatcher() = Dispatchers.Default
 
 @Single
-@Dispatcher(MangaDispatchers.IO)
-internal fun mangaIODispatcher() = Dispatchers.IO
+@Qualifier(Dispatcher.IO::class)
+internal fun iODispatcher() = Dispatchers.IO

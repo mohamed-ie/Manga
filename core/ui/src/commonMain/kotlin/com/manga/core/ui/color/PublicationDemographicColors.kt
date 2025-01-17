@@ -2,7 +2,7 @@ package com.manga.core.ui.color
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.manga.core.model.manga.MangaDexPublicationDemographic
+import com.manga.core.model.manga_dex.manga.MangaDexPublicationDemographic
 
 data class PublicationDemographicColors(
     val shounenColor: Color = Color(0xFF003366), // Dark Blue for text

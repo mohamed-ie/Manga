@@ -8,6 +8,7 @@ import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +27,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,10 +43,9 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import com.manga.core.design_system.icons.MangaIcons
-import com.manga.core.model.manga.MangaDexTagGroup
-import com.manga.core.model.manga.MangaTag
-import com.manga.core.model.manga.MinManga
-import com.manga.core.model.manga.MinTag
+import com.manga.core.model.manga_dex.manga.MangaDexTagGroup
+import com.manga.core.model.manga_dex.manga.MinManga
+import com.manga.core.model.manga_dex.manga.MinTag
 import com.manga.core.ui.component.MangaSubComposeAsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -129,6 +128,7 @@ fun FeaturedMangaHorizontalPager(
 }
 
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FeaturedMangaCard(
     modifier: Modifier = Modifier,
@@ -177,7 +177,10 @@ fun FeaturedMangaCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         manga.tags[MangaDexTagGroup.GENRE]?.let { tags ->
-            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
                 tags.forEach {
                     FeaturedMangaTag(tag = it)
                 }

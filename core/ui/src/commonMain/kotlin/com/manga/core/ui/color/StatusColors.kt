@@ -2,7 +2,7 @@ package com.manga.core.ui.color
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.manga.core.model.manga.MangaDexStatus
+import com.manga.core.model.manga_dex.manga.MangaDexStatus
 
 data class StatusColors(
     val ongoingColor: Color = Color(0xFF4CAF50), // Green for ongoing status

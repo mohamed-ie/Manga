@@ -1,17 +1,18 @@
 package com.manga.core.domain
 
-import com.manga.core.model.MangaDetails
-import com.manga.core.model.MangaException
+import com.manga.core.model.manga_dex.MangaDetails
+import com.manga.core.model.manga_dex.common.MangaException
 import com.manga.core.common.Resource
 import com.manga.core.common.getOrThrow
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import com.manga.core.data.repository.manga.MangaRepository
-import com.manga.core.model.manga.request.MangaChaptersRequest
-import com.manga.core.model.manga.request.MangaRequest
+import com.manga.core.model.manga_dex.manga.request.MangaChaptersRequest
+import com.manga.core.model.manga_dex.manga.request.MangaRequest
 import org.koin.core.annotation.Factory
 import com.manga.core.data.repository.statistics.StatisticsRepository
-import com.manga.core.model.statistics.request.MangaStatisticsRequest
+import com.manga.core.model.manga_dex.statistics.asMinStatistics
+import com.manga.core.model.manga_dex.statistics.request.MangaStatisticsRequest
 
 @Factory
 class GetMangaDetailsUseCase(
@@ -26,9 +27,9 @@ class GetMangaDetailsUseCase(
             try {
                 Resource.success(
                     MangaDetails(
-                        manga = manga.await(),
+                        manga = manga.await()!!,
                         volumes = volumes.await(),
-                        statistics = statistics.await()
+                        statistics = statistics.await().asMinStatistics
                     )
                 )
             } catch (e: MangaException) {

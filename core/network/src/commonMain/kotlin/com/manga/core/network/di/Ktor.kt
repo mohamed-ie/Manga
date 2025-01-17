@@ -1,11 +1,6 @@
 package com.manga.core.network.di
 
-import com.manga.core.network.response.common.ChapterRelationship
-import com.manga.core.network.response.common.MangaRelationship
-import com.manga.core.network.response.common.NoAttributeRelationship
-import com.manga.core.network.response.common.RelationshipDto
-import com.manga.core.network.response.common.ScanlationGroupRelationship
-import com.manga.core.network.response.common.UserRelationship
+import com.manga.core.network.manga_dex.model.common.relationships.*
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,18 +14,28 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
-import network.BuildConfig
+import network.CommonBuildConfig
 import org.koin.core.annotation.Single
+import sp.bvantur.inspektify.ktor.AutoDetectTarget
+import sp.bvantur.inspektify.ktor.DataRetentionPolicy
+import sp.bvantur.inspektify.ktor.InspektifyKtor
 
 @Single
-internal fun httpClick() = HttpClient() {
+internal fun httpClick() = HttpClient {
     install(DefaultRequest) {
-        url(BuildConfig.MANGA_DEX_URL)
+        url(CommonBuildConfig.MANGA_DEX_URL)
         contentType(ContentType.Application.Json)
     }
 
     install(ContentNegotiation) {
         json(MangaJson)
+    }
+
+    install(InspektifyKtor){
+        shortcutEnabled = true
+        logLevel = sp.bvantur.inspektify.ktor.LogLevel.All
+        autoDetectEnabledFor = setOf(AutoDetectTarget.Android)
+        dataRetentionPolicy = DataRetentionPolicy.SessionCount(4)
     }
 
     install(Logging) {
@@ -39,6 +44,7 @@ internal fun httpClick() = HttpClient() {
                 println("HttpClient: $message")
             }
         }
+
         level = LogLevel.ALL
     }
 }
@@ -48,11 +54,11 @@ private val MangaJson = Json {
     isLenient = true
     allowSpecialFloatingPointValues = true
     allowStructuredMapKeys = true
-    prettyPrint = false
+    prettyPrint = true
     useArrayPolymorphism = false
     ignoreUnknownKeys = true
     serializersModule = SerializersModule {
-        polymorphic(baseClass = RelationshipDto::class) {
+        polymorphic(baseClass = RelationshipNetworkModel::class) {
             subclass(MangaRelationship::class)
             subclass(ChapterRelationship::class)
             subclass(UserRelationship::class)

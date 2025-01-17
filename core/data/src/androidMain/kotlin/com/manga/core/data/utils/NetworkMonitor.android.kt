@@ -6,7 +6,6 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import com.manga.core.common.di.Dispatcher
-import com.manga.core.common.di.MangaDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -14,12 +13,14 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import org.koin.core.annotation.Named
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
 @Single
 internal class ConnectivityManagerNetworkMonitor(
     private val context: Context,
-    @Dispatcher(MangaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+    @Qualifier(Dispatcher.IO::class) ioDispatcher: CoroutineDispatcher,
 ) : NetworkMonitor {
 
     override val isOnline: Flow<Boolean> = callbackFlow {

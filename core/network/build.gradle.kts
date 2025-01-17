@@ -24,9 +24,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-
-            //paging
-            implementation(libs.paging.common)
+            implementation(libs.inspektify.ktor3)
         }
 
         androidMain.dependencies {
@@ -35,11 +33,6 @@ kotlin {
 
             //coroutines
             implementation(libs.kotlinx.coroutines.android)
-        }
-
-        iosMain.dependencies {
-            //ktor
-            implementation(libs.ktor.client.darwin)
         }
     }
 }

@@ -25,10 +25,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.manga.core.design_system.theme.MangaTheme
-import com.manga.core.model.chapter.MinChapter
-import com.manga.core.model.manga.MangaDexPublicationDemographic
-import com.manga.core.model.manga.MangaDexStatus
-import com.manga.core.model.manga.MinManga
+import com.manga.core.model.manga_dex.chapter.MinChapter
+import com.manga.core.model.manga_dex.manga.MangaDexPublicationDemographic
+import com.manga.core.model.manga_dex.manga.MangaDexStatus
+import com.manga.core.model.manga_dex.manga.MinManga
 import com.manga.core.ui.RatingStarIcon
 import com.manga.core.ui.color.LocalPublicationDemographicColor
 import com.manga.core.ui.color.LocalStatusColors

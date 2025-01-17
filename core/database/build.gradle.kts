@@ -13,7 +13,7 @@ kotlin{
             implementation(libs.kotlinx.coroutines.core)
         }
 
-        androidNativeMain.dependencies {
+        androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
         }
     }

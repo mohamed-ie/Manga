@@ -6,7 +6,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.manga.core.common.Resource
 import com.manga.core.common.onSuccess
-import com.manga.core.model.MangaException
+import com.manga.core.model.manga_dex.common.MangaException
 import com.manga.core.common.Pageable
 import com.manga.core.common.onFailure
 
