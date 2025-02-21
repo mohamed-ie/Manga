@@ -4,12 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import com.manga.app.ui.MangaAppState
-import com.manga.feature.chapter.navigation.chapterScreen
-import com.manga.feature.chapter.navigation.navigateToChapter
-import com.manga.feature.home.navigation.homeScreen
-import com.manga.feature.latest_updated.navigation.latestUpdatedScreen
-import com.manga.feature.latest_updated.navigation.navigateToLatestUpdated
-import com.manga.feature.more.more.navigation.moreScreen
+import com.manga.feature.onboarding.navigation.Onboarding
+import com.manga.feature.onboarding.navigation.onboardingScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -20,28 +16,16 @@ fun MangaNavHost(
     modifier: Modifier = Modifier,
     appState: MangaAppState
 ) {
+    val navController = appState.navController
+
     NavHost(
         modifier = modifier,
-        startDestination = TopLevelDestination.HOME.route,
+        startDestination = Onboarding::class,
         route = MangaNavHost::class,
-        navController = appState.navController
+        navController = navController
     ) {
-        homeScreen(
-            navigateToManga = {},
-            navigateToChapter = appState.navController::navigateToChapter,
-            navigateToLatestUpdated = appState.navController::navigateToLatestUpdated
-        )
+        onboardingScreen(navigateToMainScreen = navController::navigateToBottomNavigation)
 
-        latestUpdatedScreen(
-            navigateToManga = {},
-            navigateToChapter = appState.navController::navigateToChapter
-        )
-
-        chapterScreen()
-
-        moreScreen(
-            navigateToAccount = {},
-            navigateToMangaSettings = {}
-        )
+        bottomNavigation()
     }
 }

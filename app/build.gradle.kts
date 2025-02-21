@@ -15,14 +15,17 @@ kotlin {
         commonMain.dependencies {
             implementation(projects.core.ui)
             implementation(projects.core.data)
+            implementation(projects.source.mangadex.data)
+            implementation(projects.source.mangadex.network)
+            implementation(projects.source.mangadex.ui)
             implementation(projects.core.datastore)
             implementation(projects.core.domain)
             implementation(projects.core.network)
 
-            implementation(projects.feature.home)
-            implementation(projects.feature.manga.latestUpdated)
-            implementation(projects.feature.chapter)
-            implementation(projects.feature.more.more)
+            implementation(projects.feature.manga.explore)
+            implementation(projects.feature.onboarding)
+            implementation(projects.feature.library)
+            implementation(projects.feature.more)
 
             implementation(libs.androidx.navigation.compose)
 
@@ -37,6 +40,7 @@ kotlin {
         androidMain.dependencies {
             //koin
             implementation(libs.koin.androidx.compose)
+            implementation(libs.androidx.core.splashscreen)
         }
 
         desktopMain.dependencies {
@@ -45,12 +49,6 @@ kotlin {
 
     }
 }
-
-ksp {
-    arg("KOIN_USE_COMPOSE_VIEWMODEL", "true")
-    arg("KOIN_DEFAULT_MODULE", "false")
-}
-
 
 android {
     namespace = "com.manga.app"

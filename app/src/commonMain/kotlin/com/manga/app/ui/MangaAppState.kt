@@ -4,18 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.get
+import com.compose.utils.app_event.AppEventInvoker
 import com.manga.app.navigation.TopLevelDestination
 import com.manga.core.data.utils.NetworkMonitor
 import com.manga.core.data.utils.TimeZoneMonitor
+import com.manga.core.ui.locals.BottomBarState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,11 +31,14 @@ import kotlinx.datetime.TimeZone
 fun rememberMangaAppState(
     networkMonitor: NetworkMonitor,
     timeZoneMonitor: TimeZoneMonitor,
+    appEventInvoker: AppEventInvoker,
+    bottomBarState: BottomBarState = BottomBarState(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
     navController: NavHostController = rememberNavController()
 ) = remember(
     coroutineScope,
     timeZoneMonitor,
+    bottomBarState,
     navController,
     networkMonitor
 ) {
@@ -42,6 +46,8 @@ fun rememberMangaAppState(
         navController = navController,
         networkMonitor = networkMonitor,
         coroutineScope = coroutineScope,
+        appEventInvoker = appEventInvoker,
+        bottomBarState = bottomBarState,
         timeZoneMonitor = timeZoneMonitor
     )
 }
@@ -50,8 +56,10 @@ fun rememberMangaAppState(
 class MangaAppState(
     val navController: NavHostController,
     val coroutineScope: CoroutineScope,
+    val appEventInvoker: AppEventInvoker,
+    val bottomBarState: BottomBarState,
     timeZoneMonitor: TimeZoneMonitor,
-    networkMonitor: NetworkMonitor
+    networkMonitor: NetworkMonitor,
 ) {
 
     val isOffline = networkMonitor.isOnline
@@ -69,7 +77,6 @@ class MangaAppState(
             TimeZone.currentSystemDefault(),
         )
 
-
     private val forceHideBottomBarState = MutableStateFlow(false)
 
     private val shouldShowBottomBarState = navController.currentBackStackEntryFlow
@@ -78,7 +85,9 @@ class MangaAppState(
                 navBackStackEntry.destination.hierarchy.any { it.hasRoute(destination.route::class) } &&
                         navBackStackEntry.destination.parent?.startDestinationId == navBackStackEntry.destination.id
             }
-        }.combine(forceHideBottomBarState.map(Boolean::not), Boolean::and)
+        }
+        .combine(forceHideBottomBarState.map(Boolean::not), Boolean::and)
+        .combine(snapshotFlow { bottomBarState.visible }, Boolean::and)
         .stateIn(
             scope = coroutineScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -95,10 +104,7 @@ class MangaAppState(
 
     fun hideBottomBar(hide: Boolean) = forceHideBottomBarState.update { hide }
 
-    fun navigateToBottomBarTopLevelDestination(destination: TopLevelDestination) =
-        navigateToBottomBarTopLevelDestination(destination.route)
-
-    fun navigateToBottomBarTopLevelDestination(route: Any) {
+    fun navigateToTopLevelDestination(route: Any) {
         navController.navigate(route) {
             // Pop up to the start destination of the graph to
             // avoid building up a large stack of destinations
@@ -116,11 +122,5 @@ class MangaAppState(
     }
 
     fun navigateToTopLevelDestination(destination: TopLevelDestination) =
-        navController.navigate(destination.route) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
-            }
-            launchSingleTop = true
-            restoreState = true
-        }
+        navigateToTopLevelDestination(destination.route)
 }
