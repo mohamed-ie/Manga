@@ -1,6 +1,5 @@
 package com.manga.core.data.utils
 
-import com.manga.core.common.di.ApplicationDispatchers
 import com.manga.core.common.di.Dispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -11,13 +10,14 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
+import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 import java.net.NetworkInterface
 import kotlin.coroutines.coroutineContext
 
 @Single
 internal class NetworkInterfaceNetworkMonitor(
-    @Dispatcher(ApplicationDispatchers.IO)
+    @Dispatcher.IO
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : NetworkMonitor {
     override val isOnline: Flow<Boolean> = flow {

@@ -19,7 +19,7 @@ kotlin {
             api(libs.kotlinx.datetime)
 
             //paging
-            api(libs.paging.common)
+            api(libs.androidx.paging.common)
         }
 
         androidMain.dependencies {

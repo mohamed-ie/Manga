@@ -22,7 +22,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toKotlinTimeZone
 import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
-import org.koin.core.qualifier.QualifierValue
 import java.time.ZoneId
 
 /**
@@ -31,8 +30,8 @@ import java.time.ZoneId
 @Single
 internal class TimeZoneBroadcastMonitor(
     private val context: Context,
-    @Qualifier(ApplicationScope::class) appScope: CoroutineScope,
-    @Qualifier(Dispatcher.IO::class) private val ioDispatcher: CoroutineDispatcher,
+    @ApplicationScope appScope: CoroutineScope,
+    @Dispatcher.IO private val ioDispatcher: CoroutineDispatcher,
 ) : TimeZoneMonitor {
 
     override val currentTimeZone: SharedFlow<TimeZone> =

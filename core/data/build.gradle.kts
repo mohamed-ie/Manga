@@ -12,6 +12,7 @@ kotlin {
         commonMain.dependencies {
             api(projects.core.common)
             api(projects.core.model)
+            api(projects.core.datastore)
             implementation(projects.core.network)
 
             //kotlinx
@@ -19,7 +20,7 @@ kotlin {
             api(libs.kotlinx.datetime)
 
             //paging
-            api(libs.paging.common)
+            api(libs.androidx.paging.common)
         }
 
         androidMain.dependencies {

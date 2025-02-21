@@ -13,14 +13,12 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
-import org.koin.core.annotation.Named
-import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
 @Single
 internal class ConnectivityManagerNetworkMonitor(
     private val context: Context,
-    @Qualifier(Dispatcher.IO::class) ioDispatcher: CoroutineDispatcher,
+    @Dispatcher.IO ioDispatcher: CoroutineDispatcher,
 ) : NetworkMonitor {
 
     override val isOnline: Flow<Boolean> = callbackFlow {

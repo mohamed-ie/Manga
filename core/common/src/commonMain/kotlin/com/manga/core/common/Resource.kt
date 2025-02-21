@@ -9,15 +9,14 @@ sealed interface Resource<out D, out E : Throwable> {
     companion object {
         fun <D, E : Throwable> success(data: D): Resource<D, E> = Success(data)
         fun <D, E : Throwable> expectedFailure(cause: E): Resource<D, E> = Expected(cause)
-        fun <D, E : Throwable> unexpectedFailure(cause: Throwable): Resource<D, E> =
-            Unexpected(cause)
+        fun <D, E : Throwable> unexpectedFailure(cause: Throwable): Resource<D, E> = Unexpected(cause)
     }
 
-    data class Success<D> internal constructor(val data: D) : Resource<D, Nothing>
+    data class Success<D>(val data: D) : Resource<D, Nothing>
 
     sealed interface Failure<out E : Throwable> : Resource<Nothing, E> {
-        data class Expected<E : Throwable> internal constructor(val cause: E) : Failure<E>
-        data class Unexpected internal constructor(val cause: Throwable) : Failure<Nothing>
+        data class Expected<E : Throwable>(val cause: E) : Failure<E>
+        data class Unexpected(val cause: Throwable) : Failure<Nothing>
     }
 }
 
@@ -30,6 +29,7 @@ fun <D, E : Throwable> Resource<D, E>.getOrThrow(): D = when (this) {
 }
 
 fun <D, E : Throwable> Resource<D, E>.expectedCauseOrNull() = (this as? Expected<E>)?.cause
+
 fun <D, E : Throwable> Resource<D, E>.unexpectedCauseOrNull() = (this as? Unexpected)?.cause
 
 inline fun <D, E : Throwable> Resource<D, E>.onSuccess(block: (D) -> Unit): Resource<D, E> {
@@ -54,24 +54,22 @@ inline fun <D, E : Throwable> Resource<D, E>.onFailure(
     onExpected: (E) -> Unit,
     onUnexpected: (Throwable) -> Unit
 ): Resource<D, E> {
-    if (this is Expected)
-        onExpected(cause)
-
-    if (this is Unexpected)
-        onUnexpected(cause)
+    when (this) {
+        is Expected -> onExpected(cause)
+        is Unexpected -> onUnexpected(cause)
+        is Success -> Unit
+    }
 
     return this
 }
 
 inline fun <D, E : Throwable> Resource<D, E>.onExpectedFailure(block: (E) -> Unit): Resource<D, E> {
-    if (this is Expected)
-        block(cause)
+    if (this is Expected) block(cause)
     return this
 }
 
 inline fun <D, E : Throwable> Resource<D, E>.onUnexpectedFailure(block: (Throwable) -> Unit): Resource<D, E> {
-    if (this is Unexpected)
-        block(cause)
+    if (this is Unexpected) block(cause)
     return this
 }
 
@@ -88,31 +86,36 @@ inline fun <D, E : Throwable> Resource<D, E>.handle(
     return this
 }
 
-inline fun <I, O, E : Throwable> Resource<I, E>.map(transformer: (I) -> O): Resource<O, E> =
+inline fun <I, O, reified E : Throwable> Resource<I, E>.map(transformer: (I) -> O): Resource<O, E> =
     when (this) {
-        is Success ->
-            try {
-                Resource.success(transformer(data))
-            } catch (e: Throwable) {
-                Resource.unexpectedFailure(e)
-            }
-
-        is Expected -> Resource.expectedFailure(cause)
-        is Unexpected -> Resource.unexpectedFailure(cause)
+        is Success -> resourceOf<O, E> { transformer(data) }
+        is Expected -> this
+        is Unexpected -> this
     }
 
 inline fun <D, I : Throwable, O : Throwable> Resource<D, I>.mapExpected(transformer: (I) -> O): Resource<D, O> =
     when (this) {
-        is Success -> Resource.success(data)
+        is Success -> this
         is Expected -> Resource.expectedFailure(transformer(cause))
-        is Unexpected -> Resource.unexpectedFailure(cause)
+        is Unexpected -> this
     }
 
-inline fun <D, reified E : Throwable> runCatching(block: () -> D): Resource<D, E> =
+inline fun <D, reified E : Throwable> resourceOf(
+    catch: (e: Throwable) -> Resource<D, E> = { e ->
+        if (e is E) Resource.expectedFailure(e)
+        else Resource.unexpectedFailure(e)
+    },
+    block: () -> D
+): Resource<D, E> =
     try {
         Resource.success(block())
     } catch (e: Throwable) {
-        if (e is E)
-            Resource.expectedFailure(e)
-        else Resource.unexpectedFailure(e)
+        catch(e)
+    }
+
+inline fun <D> resourceOf(block: () -> D): Resource<D, Throwable> =
+    try {
+        Resource.success(block())
+    } catch (e: Throwable) {
+        Resource.unexpectedFailure(e)
     }

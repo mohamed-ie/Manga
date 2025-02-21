@@ -1,7 +1,6 @@
 package com.manga.core.common.di
 
 import kotlinx.coroutines.Dispatchers
-import org.koin.core.annotation.Named
 import org.koin.core.annotation.Qualifier
 import org.koin.core.annotation.Single
 
@@ -15,9 +14,9 @@ annotation class Dispatcher {
 
 
 @Single
-@Qualifier(Dispatcher.Default::class)
+@Dispatcher.Default
 internal fun defaultDispatcher() = Dispatchers.Default
 
 @Single
-@Qualifier(Dispatcher.IO::class)
+@Dispatcher.IO
 internal fun iODispatcher() = Dispatchers.IO

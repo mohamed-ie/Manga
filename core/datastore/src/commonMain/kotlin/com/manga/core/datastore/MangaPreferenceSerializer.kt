@@ -1,7 +1,7 @@
 package com.manga.core.datastore
 
 import androidx.datastore.core.okio.OkioSerializer
-import com.manga.core.model.manga_dex.datastore.MangaPreferences
+import com.manga.core.model.preference.MangaPreference
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
@@ -12,20 +12,20 @@ import okio.IOException
 import org.koin.core.annotation.Single
 
 @Single
-internal class MangaPreferencesSerializer : OkioSerializer<MangaPreferences> {
-    override val defaultValue = MangaPreferences()
+internal class MangaPreferenceSerializer : OkioSerializer<MangaPreference> {
+    override val defaultValue = MangaPreference()
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun readFrom(source: BufferedSource): MangaPreferences {
+    override suspend fun readFrom(source: BufferedSource): MangaPreference {
         try {
-            return ProtoBuf.decodeFromByteArray<MangaPreferences>(source.readByteArray())
+            return ProtoBuf.decodeFromByteArray<MangaPreference>(source.readByteArray())
         } catch (exception: IOException) {
             throw Exception(exception.message ?: "Serialization Exception")
         }
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override suspend fun writeTo(t: MangaPreferences, sink: BufferedSink) {
+    override suspend fun writeTo(t: MangaPreference, sink: BufferedSink) {
         sink.write(ProtoBuf.encodeToByteArray(t))
     }
 }
