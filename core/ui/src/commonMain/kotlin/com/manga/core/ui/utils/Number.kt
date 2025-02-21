@@ -1,4 +1,4 @@
-package com.manga.core.ui
+package com.manga.core.ui.utils
 
 import kotlin.math.pow
 import kotlin.math.round

@@ -19,6 +19,7 @@
     <string name="core_ui_text_latest_updates">Latest updates</string>
 
     <string name="core_ui_text_explore">Explore</string>
+    <string name="core_ui_text_no_content">No content</string>
     <string name="core_ui_text_home">Home</string>
     <string name="core_ui_text_library">Library</string>
     <string name="core_ui_text_more">More</string>
@@ -32,6 +33,7 @@
     <string name="core_ui_content_description_follows">Follows</string>
     <string name="core_ui_content_description_rating">Rating</string>
     <string name="core_ui_message_unexpected_exception">Unexpected exception occurred please try again later</string>
+    <string name="core_ui_message_failed_to_load_content">Failed to load content</string>
     <string name="core_ui_content_description_scroll_to_top">Scroll to top</string>
     <string name="core_ui_content_description_personal_picture">Personal picture</string>
     <string name="core_ui_action_logout">Logout</string>

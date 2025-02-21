@@ -12,11 +12,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope.Companion.DefaultFilterQ
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.AsyncImagePainter.Companion.DefaultTransform
 import coil3.compose.AsyncImagePainter.State
-import coil3.compose.DefaultModelEqualityDelegate
-import coil3.compose.EqualityDelegate
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageScope
-import com.manga.core.ui.shimmer
+import com.manga.core.ui.effects.shimmerEffect
 
 @Composable
 fun MangaSubComposeAsyncImage(
@@ -25,7 +23,7 @@ fun MangaSubComposeAsyncImage(
     modifier: Modifier = Modifier,
     transform: (State) -> State = DefaultTransform,
     loading: @Composable (SubcomposeAsyncImageScope.(State.Loading) -> Unit)? = {
-        Box(Modifier.fillMaxSize().shimmer(true))
+        Box(Modifier.fillMaxSize().shimmerEffect(true))
     },
     success: @Composable (SubcomposeAsyncImageScope.(State.Success) -> Unit)? = null,
     error: @Composable (SubcomposeAsyncImageScope.(State.Error) -> Unit)? = null,
@@ -37,7 +35,7 @@ fun MangaSubComposeAsyncImage(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DefaultFilterQuality,
-    modelEqualityDelegate: EqualityDelegate = DefaultModelEqualityDelegate
+    clipToBounds: Boolean = true,
 ) = SubcomposeAsyncImage(
     model = model,
     contentDescription = contentDescription,
@@ -54,5 +52,5 @@ fun MangaSubComposeAsyncImage(
     alpha = alpha,
     colorFilter = colorFilter,
     filterQuality = filterQuality,
-    modelEqualityDelegate = modelEqualityDelegate
+    clipToBounds = clipToBounds
 )

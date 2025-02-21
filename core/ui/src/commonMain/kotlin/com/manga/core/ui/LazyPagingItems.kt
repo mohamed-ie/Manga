@@ -1,24 +1,12 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.manga.core.ui
 
 import androidx.compose.runtime.*
 import androidx.paging.*
-import androidx.paging.PagingData
+import com.manga.core.ui.LazyPagingItemsContentState.Empty
+import com.manga.core.ui.LazyPagingItemsContentState.Error
+import com.manga.core.ui.LazyPagingItemsContentState.Loading
+import com.manga.core.ui.LazyPagingItemsContentState.NotLoading
+import com.manga.core.ui.LazyPagingItemsContentState.Refreshing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
@@ -28,7 +16,10 @@ import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
+
 /**
+ * This file coped from [LazyPagingItems](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:paging/paging-compose/src/commonMain/kotlin/androidx/paging/compose/LazyPagingItems.kt?q=file:androidx%2Fpaging%2Fcompose%2FLazyPagingItems.kt%20class:androidx.paging.compose.LazyPagingItems)
+ * 
  * The class responsible for accessing the data from a [Flow] of [PagingData]. In order to obtain an
  * instance of [LazyPagingItems] use the [collectAsLazyPagingItems] extension method of [Flow] with
  * [PagingData]. This instance can be used for Lazy foundations such as [LazyListScope.items] to
@@ -40,10 +31,6 @@ import kotlin.coroutines.EmptyCoroutineContext
  * @sample androidx.paging.compose.samples.PagingPreview
  * @param T the type of value used by [PagingData].
  */
-
-
-/** # this file coped from [LazyPagingItems](https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:paging/paging-compose/src/commonMain/kotlin/androidx/paging/compose/LazyPagingItems.kt?q=file:androidx%2Fpaging%2Fcompose%2FLazyPagingItems.kt%20class:androidx.paging.compose.LazyPagingItems)
- * */
 public class LazyPagingItems<T : Any> internal constructor(
     /** the [Flow] object which contains a stream of [PagingData] elements. */
     private val flow: Flow<PagingData<T>>
@@ -200,4 +187,90 @@ public fun <T : Any> Flow<PagingData<T>>.collectAsLazyPagingItems(
     }
 
     return lazyPagingItems
+}
+
+
+/**
+ * Determines the current state of the LazyPagingItems based on its load state and item count.
+ *
+ * @receiver The LazyPagingItems instance whose state is being evaluated.
+ * @return A [LazyPagingItemsContentState] representing the current state:
+ * - [LazyPagingItemsContentState.Error.PrependError] if there is an error in the prepend load state.
+ * - [LazyPagingItemsContentState.Error.AppendError] if there is an error in the append load state.
+ * - [LazyPagingItemsContentState.Error.RefreshError] if there is an error in the refresh load state.
+ * - [LazyPagingItemsContentState.Refreshing] if the refresh load state is currently loading and there are items.
+ * - [LazyPagingItemsContentState.Loading] if the refresh load state is currently loading and there are no items.
+ * - [LazyPagingItemsContentState.Empty] if there are no items and the load state is idle.
+ * - [LazyPagingItemsContentState.NotLoading] if none of the above conditions are met.
+ */
+val LazyPagingItems<*>.contentState get() = when {
+    itemCount != 0 && loadState.prepend is LoadState.Error ->
+        Error.PrependError((loadState.prepend as LoadState.Error).error)
+
+    itemCount != 0 && loadState.append is LoadState.Error ->
+        Error.AppendError((loadState.append as LoadState.Error).error)
+
+    itemCount != 0 && loadState.refresh is LoadState.Error ->
+        Error.RefreshError((loadState.refresh as LoadState.Error).error)
+
+    itemCount != 0 && loadState.refresh is LoadState.Loading -> Refreshing
+    itemCount == 0 && loadState.refresh is LoadState.Loading -> Loading
+    itemCount == 0 && loadState.isIdle -> Empty
+    else -> NotLoading
+}
+
+
+/**
+ * Represents the various states of a [LazyPagingItems] instance.
+ *
+ * This sealed interface is used to determine the current state of the paging items,
+ * which can be one of the following:
+ * - [Loading]: Indicates that the data is currently being loaded.
+ * - [Refreshing]: Indicates that the data is being refreshed.
+ * - [Empty]: Indicates that there are no items to display.
+ * - [NotLoading]: Indicates that the data is not currently loading or refreshing.
+ * - [Error]: Represents an error state with specific error types for different loading stages.
+ */
+sealed interface LazyPagingItemsContentState {
+
+    /** Indicates that the data is currently being loaded. */
+    data object Loading : LazyPagingItemsContentState
+
+    /** Indicates that the data is being refreshed. */
+    data object Refreshing : LazyPagingItemsContentState
+
+    /** Indicates that there are no items to display. */
+    data object Empty : LazyPagingItemsContentState
+
+    /** Indicates that the data is not currently loading or refreshing. */
+    data object NotLoading : LazyPagingItemsContentState
+
+    /**
+     * Represents an error state with specific error types for different loading stages.
+     *
+     * @property exception The exception that caused the error.
+     */
+    sealed class Error(open val exception: Throwable) : LazyPagingItemsContentState {
+
+        /**
+         * Represents an error that occurred during the refresh stage.
+         *
+         * @property exception The exception that caused the refresh error.
+         */
+        data class RefreshError(override val exception: Throwable) : Error(exception)
+
+        /**
+         * Represents an error that occurred during the append stage.
+         *
+         * @property exception The exception that caused the append error.
+         */
+        data class AppendError(override val exception: Throwable) : Error(exception)
+
+        /**
+         * Represents an error that occurred during the prepend stage.
+         *
+         * @property exception The exception that caused the prepend error.
+         */
+        data class PrependError(override val exception: Throwable) : Error(exception)
+    }
 }

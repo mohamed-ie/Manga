@@ -25,18 +25,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.manga.core.design_system.theme.MangaTheme
-import com.manga.core.model.manga_dex.chapter.MinChapter
-import com.manga.core.model.manga_dex.manga.MangaDexPublicationDemographic
-import com.manga.core.model.manga_dex.manga.MangaDexStatus
-import com.manga.core.model.manga_dex.manga.MinManga
-import com.manga.core.ui.RatingStarIcon
+import com.manga.core.model.manga.Manga
+import com.manga.core.model.manga.Manga.LastChapter
 import com.manga.core.ui.color.LocalPublicationDemographicColor
 import com.manga.core.ui.color.LocalStatusColors
 import com.manga.core.ui.color.color
 import com.manga.core.ui.color.containerColor
 import com.manga.core.ui.component.MangaSubComposeAsyncImage
-import com.manga.core.ui.relativeTime
-import com.manga.core.ui.shimmer
+import com.manga.core.ui.component.RatingStarIcon
+import com.manga.core.ui.effects.shimmerEffect
+import com.manga.core.ui.utils.relativeTime
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Clock
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.text_chapter_number
@@ -46,8 +45,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun MangaCard(
     modifier: Modifier = Modifier,
-    manga: MinManga?,
-    showChapter: Boolean,
+    manga: Manga?,
     showStatus: Boolean = true,
     showPublicationDemographic: Boolean = true,
     onClick: () -> Unit,
@@ -66,7 +64,7 @@ fun MangaCard(
             MangaSubComposeAsyncImage(
                 modifier = Modifier.fillMaxSize()
                     .clip(shape = MaterialTheme.shapes.small)
-                    .shimmer(visible = manga == null),
+                    .shimmerEffect(visible = manga == null),
                 model = manga?.cover,
                 contentScale = ContentScale.Crop,
                 contentDescription = null
@@ -76,8 +74,8 @@ fun MangaCard(
                 Modifier.background(
                     Brush.verticalGradient(
                         listOf(
+                            MaterialTheme.colorScheme.background.copy(0.1f),
                             MaterialTheme.colorScheme.background.copy(0.2f),
-                            MaterialTheme.colorScheme.background.copy(0.7f),
                             MaterialTheme.colorScheme.background
                         ),
                         startY = 0f,
@@ -91,7 +89,7 @@ fun MangaCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (showPublicationDemographic)
-                    manga?.publicationDemographic?.let {
+                    manga?.demographic?.let {
                         Surface(
                             color = publicationDemographicColors.containerColor(it),
                             contentColor = publicationDemographicColors.color(it),
@@ -108,9 +106,7 @@ fun MangaCard(
                 Spacer(Modifier.weight(1f))
 
                 manga?.statistics?.let { statistics ->
-                    RatingStarIcon(
-                        rating = statistics.rating
-                    )
+                    RatingStarIcon(rating = statistics.rating)
                 }
             }
 
@@ -134,7 +130,7 @@ fun MangaCard(
 
         Text(
             modifier = Modifier.fillMaxWidth()
-                .shimmer(
+                .shimmerEffect(
                     visible = manga == null,
                     lines = 2,
                     shape = MaterialTheme.shapes.small
@@ -146,8 +142,7 @@ fun MangaCard(
             fontWeight = FontWeight.Normal,
             style = MaterialTheme.typography.bodyMedium
         )
-
-        if (showChapter)
+        if (manga == null || manga.lastChapter != null)
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.surfaceContainer,
@@ -155,7 +150,7 @@ fun MangaCard(
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth()
-                        .shimmer(visible = manga == null)
+                        .shimmerEffect(visible = manga == null)
                         .clickable(
                             enabled = manga != null,
                             role = Role.Button,
@@ -195,23 +190,22 @@ fun MangaCardPreview() {
     MangaTheme {
         MangaCard(
             modifier = Modifier,
-            manga = MinManga(
+            manga = Manga(
                 id = "",
                 title = """"冴えない栞(35)の隣に【魚男】が引っ越して来て、代わり映えのない毎日が激変!! 魚男が時々超絶イケメンに見えるのはなぜ――!? そして栞の恋が動き始める…""",
                 cover = null,
-                lastChapter = MinChapter(
+                lastChapter = LastChapter(
                     id = "id",
                     name = "Hal Calderon",
                     readableAt = Clock.System.now()
                 ),
-                status = MangaDexStatus.CANCELLED,
-                publicationDemographic = MangaDexPublicationDemographic.SEINEN,
+                status = Manga.Status.CANCELLED,
+                demographic = Manga.Demographic.SEINEN,
                 statistics = null,
-                tags = emptyMap(),
+                tags = persistentListOf(),
                 description = """冴えない栞(35)の隣に【魚男】が引っ越して来て、代わり映えのない毎日が激変!! 魚男が時々超絶イケメンに見えるのはなぜ――!? そして栞の恋が動き始める…"""
             ),
             onClick = {},
-            showChapter = false,
             onChapterClick = {}
         )
     }

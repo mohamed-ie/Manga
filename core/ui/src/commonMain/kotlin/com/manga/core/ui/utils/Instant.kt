@@ -1,9 +1,9 @@
-package com.manga.core.ui
+package com.manga.core.ui.utils
 
 import androidx.compose.runtime.Composable
+import com.manga.core.ui.locals.LocalTimeZone
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.periodUntil
 import manga.core.ui.generated.resources.Res
 import manga.core.ui.generated.resources.text_now
@@ -17,7 +17,7 @@ import org.jetbrains.compose.resources.stringResource
 
 val Instant.relativeTime
     @Composable
-    get() = periodUntil(Clock.System.now(), TimeZone.UTC).run {
+    get() = periodUntil(Clock.System.now(), LocalTimeZone.current).run {
         if (years > 1)
             return@run stringResource(Res.string.text_short_years_ago, years)
 

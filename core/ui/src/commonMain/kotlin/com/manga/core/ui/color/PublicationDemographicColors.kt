@@ -2,7 +2,7 @@ package com.manga.core.ui.color
 
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
-import com.manga.core.model.manga_dex.manga.MangaDexPublicationDemographic
+import com.manga.core.model.manga.Manga.Demographic
 
 data class PublicationDemographicColors(
     val shounenColor: Color = Color(0xFF003366), // Dark Blue for text
@@ -20,20 +20,20 @@ data class PublicationDemographicColors(
 
 val LocalPublicationDemographicColor = compositionLocalOf { PublicationDemographicColors() }
 
-fun PublicationDemographicColors.color(mangaDexPublicationDemographic: MangaDexPublicationDemographic) =
-    when (mangaDexPublicationDemographic) {
-        MangaDexPublicationDemographic.SHOUNEN -> shounenColor
-        MangaDexPublicationDemographic.SHOUJO -> shoujoColor
-        MangaDexPublicationDemographic.JOSEI -> joseiColor
-        MangaDexPublicationDemographic.SEINEN -> seinenColor
-        MangaDexPublicationDemographic.NONE -> Color.White
+fun PublicationDemographicColors.color(demographic: Demographic) =
+    when (demographic) {
+        Demographic.SHOUNEN -> shounenColor
+        Demographic.SHOUJO -> shoujoColor
+        Demographic.JOSEI -> joseiColor
+        Demographic.SEINEN -> seinenColor
+        Demographic.NONE -> Color.White
     }
 
-fun PublicationDemographicColors.containerColor(mangaDexPublicationDemographic: MangaDexPublicationDemographic) =
-    when (mangaDexPublicationDemographic) {
-        MangaDexPublicationDemographic.SHOUNEN -> shounenContainerColor
-        MangaDexPublicationDemographic.SHOUJO -> shoujoContainerColor
-        MangaDexPublicationDemographic.JOSEI -> joseiContainerColor
-        MangaDexPublicationDemographic.SEINEN -> seinenContainerColor
-        MangaDexPublicationDemographic.NONE -> Color.DarkGray
+fun PublicationDemographicColors.containerColor(demographic: Demographic) =
+    when (demographic) {
+        Demographic.SHOUNEN -> shounenContainerColor
+        Demographic.SHOUJO -> shoujoContainerColor
+        Demographic.JOSEI -> joseiContainerColor
+        Demographic.SEINEN -> seinenContainerColor
+        Demographic.NONE -> Color.DarkGray
     }

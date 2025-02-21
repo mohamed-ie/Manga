@@ -1,15 +1,11 @@
-package com.manga.core.ui
+package com.manga.core.ui.effects
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.InfiniteRepeatableSpec
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,13 +23,13 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 
+
 @Composable
-fun Modifier.shimmer(
+fun Modifier.shimmerEffect(
     visible: Boolean,
     colors: List<Color> = listOf(
         Color(0xFFB8B5B5),
@@ -95,7 +91,7 @@ fun Modifier.shimmer(
     }
 
 @Composable
-fun Modifier.shimmer(
+fun Modifier.shimmerEffect(
     visible: Boolean,
     colors: List<Color> = listOf(
         Color(0xFFB8B5B5),
@@ -132,57 +128,3 @@ fun Modifier.shimmer(
             Modifier
         }
     }
-
-@Composable
-fun Modifier.pulse(
-    enabled: Boolean = true,
-    initialRadius: Dp = 5.dp,
-    targetRadius: Dp = 25.dp,
-    targetColor: Color = MaterialTheme.colorScheme.primary.copy(0f),
-    initialColor: Color = MaterialTheme.colorScheme.primary.copy(.6f),
-    radiusAnimationSpec: InfiniteRepeatableSpec<Float> = infiniteRepeatable(
-        animation = tween(
-            durationMillis = 1000,
-            delayMillis = 100,
-            easing = LinearOutSlowInEasing
-        ),
-        repeatMode = RepeatMode.Restart
-    ),
-    colorAnimationSpec: InfiniteRepeatableSpec<Color> = infiniteRepeatable(
-        animation = tween(
-            durationMillis = 1000,
-            delayMillis = 100,
-            easing = LinearOutSlowInEasing
-        ),
-        repeatMode = RepeatMode.Restart
-    ),
-
-    ): Modifier = composed {
-    val infiniteTransition = rememberInfiniteTransition()
-    val density = LocalDensity.current
-    val targetRadiusPx = with(density) { targetRadius.toPx() }
-    val initialRadiusPx = with(density) { initialRadius.toPx() }
-
-    val radiusPx by infiniteTransition.animateFloat(
-        initialValue = initialRadiusPx,
-        targetValue = targetRadiusPx,
-        animationSpec = radiusAnimationSpec
-    )
-
-    val color by infiniteTransition.animateColor(
-        initialValue = initialColor,
-        targetValue = targetColor,
-        animationSpec = colorAnimationSpec
-    )
-
-    drawWithContent {
-        if (!enabled) {
-            drawContent()
-            return@drawWithContent
-        }
-        drawCircle(color = color, radius = radiusPx)
-    }
-}
-
-fun Modifier.then(condition: Boolean, modifier: Modifier) =
-    then(if (condition) modifier else Modifier)
