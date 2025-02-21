@@ -6,7 +6,7 @@ import io.ktor.client.call.body
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 
-internal suspend inline fun <reified D, reified E : Throwable> HttpClient.apiCall(
+suspend inline fun <reified D, reified E : Throwable> HttpClient.apiCall(
     block: HttpClient.() -> HttpResponse
 ): Resource<D, E> =
     try {
