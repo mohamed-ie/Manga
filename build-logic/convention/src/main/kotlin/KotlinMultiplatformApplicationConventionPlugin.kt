@@ -3,6 +3,7 @@ import com.build_logic.convention.configureKotlinMultiplatform
 import com.build_logic.convention.utils.version
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.ComposeExtension
 import org.jetbrains.compose.desktop.DesktopExtension
@@ -25,14 +26,14 @@ class KotlinMultiplatformApplicationConventionPlugin : Plugin<Project> {
     }
 }
 
-private fun Project.configureDesktop() = extensions.getByType<ComposeExtension>()
-    .extensions
-    .getByType<DesktopExtension>()
-    .apply {
-        application {
-            nativeDistributions {
-                targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-                packageVersion = version("versionName")
+private fun Project.configureDesktop() = extensions.configure<ComposeExtension> {
+    extensions.getByType<DesktopExtension>()
+        .apply {
+            application {
+                nativeDistributions {
+                    targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
+                    packageVersion = version("versionName")
+                }
             }
         }
-    }
+}

@@ -3,6 +3,7 @@ import com.build_logic.convention.configureKotlinAndroid
 import com.build_logic.convention.configureKotlinMultiplatform
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 
 class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
@@ -13,7 +14,6 @@ class KotlinMultiplatformLibraryConventionPlugin : Plugin<Project> {
         }
 
         configureKotlinMultiplatform()
-
-        configureKotlinAndroid(extensions.getByType<LibraryExtension>())
+        extensions.configure<LibraryExtension>(::configureKotlinAndroid)
     }
 }

@@ -4,6 +4,7 @@ import com.build_logic.convention.utils.sourceSets
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.compose.compose
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -18,13 +19,11 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
             apply("org.jetbrains.kotlin.plugin.serialization")
         }
 
-        extensions.getByType<KspExtension>().apply {
+        extensions.configure<KspExtension> {
             arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
         }
 
-        val kotlinMultiplatformExtension = extensions.getByType<KotlinMultiplatformExtension>()
-
-        kotlinMultiplatformExtension.apply {
+        extensions.configure<KotlinMultiplatformExtension>{
             sourceSets {
                 commonMain.dependencies {
                     implementation(project(":core:ui"))
@@ -41,6 +40,5 @@ class KotlinMultiplatformFeatureConventionPlugin : Plugin<Project> {
                 }
             }
         }
-        Unit
     }
 }

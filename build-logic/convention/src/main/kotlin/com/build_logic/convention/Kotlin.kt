@@ -5,11 +5,14 @@ import com.build_logic.convention.utils.version
 import com.build_logic.convention.utils.versionInt
 import org.gradle.kotlin.dsl.getByType
 import com.android.build.api.dsl.CommonExtension
+import com.android.build.gradle.internal.scope.ProjectInfo.Companion.getBaseName
 import com.build_logic.convention.utils.sourceSets
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.gradle.api.resources.TextResource
 import org.gradle.api.tasks.Sync
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.internal.sharedruntime.codegen.kotlinDslPackageName
 import org.gradle.kotlin.dsl.register
 import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
 import org.gradle.kotlin.dsl.withType
@@ -17,10 +20,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.Properties
 
-fun Project.configureKotlinAndroidApplication(
-    appExtension: BaseAppModuleExtension = extensions.getByType<BaseAppModuleExtension>()
-) {
-    appExtension.apply {
+fun Project.configureKotlinAndroidApplication() {
+    extensions.configure<BaseAppModuleExtension> {
         defaultConfig {
             targetSdk = versionInt("android-targetSdk")
             versionCode = versionInt("versionCode")
@@ -33,9 +34,8 @@ fun Project.configureKotlinAndroidApplication(
                 isShrinkResources = true
             }
         }
+        configureKotlinAndroidCompose(this)
     }
-
-    configureKotlinAndroidCompose(appExtension)
 }
 
 fun Project.configureKotlinAndroidCompose(
@@ -68,17 +68,15 @@ fun Project.configureKotlinAndroid(
     }
 }
 
-fun Project.configureKotlinMultiplatform(
-    kotlinMultiplatformExtension: KotlinMultiplatformExtension = extensions.getByType<KotlinMultiplatformExtension>(),
-) {
-    kotlinMultiplatformExtension.apply {
+fun Project.configureKotlinMultiplatform() {
+    extensions.configure<KotlinMultiplatformExtension> {
         jvm("desktop")
         androidTarget()
         jvmToolchain(versionInt("jdk"))
         sourceSets {
             commonMain {
                 kotlin.srcDir(commonBuildConfigGenerator.map { it.destinationDir })
-                compilerOptions{
+                compilerOptions {
                     freeCompilerArgs.addAll("-Xcontext-receivers")
                 }
             }
@@ -91,9 +89,8 @@ val Project.commonBuildConfigGenerator
         val properties =
             Properties().apply { load(project.rootProject.file("local.properties").inputStream()) }
 
-        // create a provider for the project version
         val projectVersionProvider: Provider<String> = provider { project.version.toString() }
-
+        val namespace = "com.manga${project.path.replace(":", ".")}"
         val idDebug = project.gradle.startParameter.taskNames.any { it.contains("Debug") }
 
         // map the project version into a file
@@ -101,7 +98,7 @@ val Project.commonBuildConfigGenerator
             projectVersionProvider.map { version ->
                 resources.text.fromString(
                     """
-          |package ${project.name}
+          |package $namespace
           |
           |internal object CommonBuildConfig {
           |     const val VERSION = "$version"
@@ -117,7 +114,7 @@ val Project.commonBuildConfigGenerator
         // Gradle accepts file providers as Sync inputs
         from(buildConfigFileContents) {
             rename { "CommonBuildConfig.kt" }
-            into(project.name)
+            into(namespace.replace(".","/"))
         }
 
         into(layout.buildDirectory.dir("generated-src/kotlin/"))

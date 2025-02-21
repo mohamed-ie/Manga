@@ -3,6 +3,7 @@ import com.build_logic.convention.utils.sourceSets
 import com.google.devtools.ksp.gradle.KspExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -13,12 +14,12 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
             apply("com.google.devtools.ksp")
         }
 
-        extensions.getByType<KspExtension>().apply {
+        extensions.configure<KspExtension>() {
             arg("KOIN_DEFAULT_MODULE", "false")
             arg("KOIN_CONFIG_CHECK", "false")
         }
 
-        extensions.getByType<KotlinMultiplatformExtension>().apply {
+        extensions.configure<KotlinMultiplatformExtension> {
             sourceSets {
                 commonMain {
                     kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
@@ -47,6 +48,5 @@ class KotlinMultiplatformKoinConventionPlugin : Plugin<Project> {
             }
         }
 
-        Unit
     }
 }
