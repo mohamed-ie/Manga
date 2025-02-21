@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0-alpha05"
+agp = "8.8.1"
 
 composeUtilsAppEvent = "0.0.2"
 inspektify-ktor = "1.0.0-beta08"
@@ -17,28 +17,30 @@ androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
+androidx-splashscreen = "1.0.1"
 
-compose-plugin = "1.7.0"
+compose-plugin = "1.7.3"
 junit = "4.13.2"
 kotlin = "2.1.0"
-koin-annotations-bom = "2.0.0-Beta3"
+koin-annotations-bom = "2.0.0-RC1"
 koin = "4.0.0"
 ksp = "2.1.0-1.0.29"
 kotlinx-datetime = "0.6.1"
 collections-immutable = "0.3.8"
-ktor = "3.0.0"
+ktor = "3.0.1"
 napier = "2.7.1"
-serialization-json = "1.7.3"
+serialization-json = "1.8.0"
 kotlinx-coroutines = "1.10.1"
-androidx-lifecycle = "2.8.3"
-paging = "3.3.5"
-coil = "3.0.0-alpha10"
-compose-navigation = "2.8.0-alpha10"
+androidx-lifecycle = "2.8.4"
+androidx-paging = "3.3.6"
+coil = "3.0.4"
+compose-navigation = "2.8.0-alpha11"
 datastore = "1.1.2"
-okio = "3.9.0"
+okio = "3.9.1"
 
 
 [libraries]
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-splashscreen" }
 compose-utils-app-event = { module = "io.github.mohamed-ie:compose-utils-app-event", version.ref = "composeUtilsAppEvent" }
 inspektify-ktor3 = { module = "io.github.bvantur:inspektify-ktor3", version.ref = "inspektify-ktor" }
 inspektify-ktor2 = { module = "io.github.bvantur:inspektify-ktor2", version.ref = "inspektify-ktor" }
@@ -73,8 +75,8 @@ ktor-client-plugins = { module = "io.ktor:ktor-client-plugins", version.ref = "k
 
 #paging3
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
-paging-common = { module = "androidx.paging:paging-common", version.ref = "paging" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
+androidx-paging-common = { module = "androidx.paging:paging-common", version.ref = "androidx-paging" }
 
 #kotlinX
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization-json" }
@@ -105,8 +107,9 @@ koin-annotations = { module = "io.insert-koin:koin-annotations" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
-coil-network-ktor2 = { module = "io.coil-kt.coil3:coil-network-ktor2", version.ref = "coil" }
+coil-network-ktor2 = { module = "io.coil-kt.coil2:coil-network-ktor2", version.ref = "coil" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
 android-gradle = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

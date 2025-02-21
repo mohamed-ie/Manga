@@ -1,6 +1,3 @@
-rootProject.name = "Manga"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 pluginManagement {
     includeBuild("build-logic")
     repositories {
@@ -28,6 +25,10 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+rootProject.name = "Manga"
+
 include(":app")
 include(":core:common")
 include(":core:model")
@@ -39,11 +40,11 @@ include(":core:domain")
 include(":core:design_system")
 include(":core:ui")
 
-include(":feature:manga:latest_updated")
+include(":source:mangadex:ui")
+include(":source:mangadex:data")
+include(":source:mangadex:network")
 
-include(":feature:home")
-include(":feature:chapter")
-
-include(":feature:authentication:login")
-
-include(":feature:more:more")
+include(":feature:manga:explore")
+include(":feature:onboarding")
+include(":feature:library")
+include(":feature:more")
