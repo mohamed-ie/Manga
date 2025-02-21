@@ -1,4 +1,4 @@
-package com.manga.core.model.manga_dex.common
+package com.manga.core.model.common
 
 data class MangaException(
     override val message: String? = null
